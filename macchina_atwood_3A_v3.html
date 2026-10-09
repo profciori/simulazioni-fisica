@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Macchina di Atwood — Laboratorio 3A</title>
+<style>
+:root{--ink:#17243a;--muted:#64748b;--border:#dce4ee;--bg:#f4f7fb;--card:#fff;--red:#da4656;--blue:#2867c5;--green:#168665;--purple:#8054b0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.shell{max-width:1330px;margin:auto;padding:18px 20px 30px}.top{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}.top h1{font-size:clamp(23px,2.5vw,31px);margin:0}.top p{color:var(--muted);margin:4px 0 16px}.tag{color:var(--muted);font-size:13px}.layout{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(310px,1fr);gap:16px;align-items:start}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 3px 12px #17304d08;padding:17px}.card h2{font-size:17px;margin:0 0 11px}.stage{padding:12px 12px 14px}.stage svg{width:100%;height:auto;display:block;touch-action:pan-y}.stage-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:5px 6px}.legend{display:flex;gap:12px;flex-wrap:wrap;color:#526277;font-size:13px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}.controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 5px 0}.btn{appearance:none;border:1px solid #cfd9e6;background:#fff;color:var(--ink);border-radius:9px;padding:9px 14px;min-height:41px;cursor:pointer;font-weight:650}.btn.primary{background:#1c487e;border-color:#1c487e;color:#fff}.btn:hover{filter:brightness(.97)}.controls input[type=range]{flex:1;min-width:90px}.time{font-variant-numeric:tabular-nums;color:#526277;font-size:14px}.side{display:grid;gap:16px}.control-row{display:grid;grid-template-columns:40px 1fr 90px;align-items:center;gap:10px;margin:9px 0}.control-row label{font-weight:650}.control-row input[type=range]{width:100%;accent-color:#24548f}.control-row input[type=number]{width:100%;padding:8px;border:1px solid #cdd7e3;border-radius:8px;font:inherit}.unit{color:var(--muted);font-size:12px}.switches{display:flex;flex-wrap:wrap;gap:10px 16px;margin:13px 0 0}.switches label{font-size:14px;white-space:nowrap}.switches input{accent-color:#235a9e}.eq{background:#f5f8fd;border:1px solid #e1e9f5;border-radius:11px;padding:13px 14px;margin-top:8px}.eq-row{display:flex;align-items:stretch;gap:14px;margin:5px 0}.brace-svg{width:27px;min-width:27px;align-self:stretch;overflow:visible}.brace-svg path{fill:none;stroke:#283d57;stroke-width:2.7;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}.lines{display:grid;gap:12px;padding:8px 0;font-family:Georgia,'Times New Roman',serif;font-size:19px}.math{font-family:Georgia,'Times New Roman',serif;font-size:19px}.formula{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:6px 0;font-family:Georgia,'Times New Roman',serif;font-size:19px}.fraction{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;text-align:center;line-height:1.25}.fraction .num{padding:0 7px 3px;border-bottom:1.5px solid currentColor}.fraction .den{padding:3px 7px 0}.values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:11px}.value{background:#f7f9fc;padding:9px 10px;border-radius:9px}.value b{display:block;font-size:18px;font-variant-numeric:tabular-nums}.value span{font-size:12px;color:var(--muted)}.note{font-size:13px;color:var(--muted);margin:10px 0 0}.notice{margin-top:10px;padding:9px 11px;background:#fff6e5;border:1px solid #f2d6a6;border-radius:8px;color:#79551d;font-size:13px;display:none}.notice.visible{display:block}.footer{margin:13px 3px;color:var(--muted);font-size:13px}.svg-text{font:italic 21px Georgia,'Times New Roman',serif;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}.block-label{font:italic 25px Georgia,'Times New Roman',serif;fill:#fff}.arrow{stroke-width:3.6;stroke-linecap:round}.path-string{stroke:#6c7787;stroke-width:2.6;fill:none}.key{color:var(--muted);font-size:13px}@media(max-width:870px){.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.side .param{grid-column:1/-1}}@media(max-width:650px){.shell{padding:12px}.card{padding:13px}.side{grid-template-columns:1fr}.top p{margin-bottom:10px}.svg-text{font-size:22px}.controls{gap:7px}.btn{padding:9px 11px}}
+
+.view-tabs{display:flex;gap:5px;background:#eef3f9;padding:5px;border-radius:11px;margin:0 0 12px}
+.view-btn{flex:1;min-height:42px;padding:8px 11px;border:0;border-radius:8px;background:transparent;color:#40516b;font:inherit;font-weight:650;cursor:pointer}
+.view-btn[aria-pressed="true"]{background:white;color:#17497f;box-shadow:0 1px 5px #20395320}
+#scene.force-view #rope,#scene.force-view #left-group rect,#scene.force-view #right-group rect{opacity:.12}
+#scene.force-view #left-group text,#scene.force-view #right-group text{opacity:0}
+#scene.motion-view #forces,#scene.motion-view #kinematics{display:none}
+#mode-caption{font-size:13px;color:var(--muted);margin:0 3px 8px;min-height:19px}
+#vector-options[hidden]{display:none}
+@media(max-width:650px){.view-btn{font-size:13px}}
+</style>
+</head>
+<body><div class="shell">
+<header class="top"><div><h1>Macchina di Atwood</h1><p>Dinamica dei sistemi · Classe 3A · funi e carrucola ideali</p></div><div class="tag">Modello ideale · g = 9,81 m/s²</div></header>
+<main class="layout">
+<section class="card stage" aria-label="Animazione della macchina di Atwood">
+<div class="view-tabs" role="group" aria-label="Modalità di visualizzazione">
+<button type="button" class="view-btn" id="motionMode" aria-pressed="true">▶ Moto</button>
+<button type="button" class="view-btn" id="forcesMode" aria-pressed="false">↗ Diagramma delle forze</button>
+</div><p id="mode-caption">Osserva il movimento dei due blocchi collegati dalla fune.</p>
+<svg id="scene" class="motion-view" viewBox="0 0 760 540" role="img" aria-label="Due masse collegate da una fune sopra una carrucola con vettori delle forze e dell'accelerazione">
+<defs><marker id="arrow-red" markerWidth="7" markerHeight="7" refX="5.2" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L6 3 L0 6 Z" fill="#da4656"/></marker><marker id="arrow-blue" markerWidth="7" markerHeight="7" refX="5.2" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L6 3 L0 6 Z" fill="#2867c5"/></marker><marker id="arrow-green" markerWidth="7" markerHeight="7" refX="5.2" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L6 3 L0 6 Z" fill="#168665"/></marker></defs>
+<rect x="1" y="1" width="758" height="538" fill="#fbfdff" rx="9"/>
+<path d="M275 39 H485" stroke="#a5b1bf" stroke-width="8" stroke-linecap="round"/>
+<path d="M380 39 V65" stroke="#8493a5" stroke-width="8"/>
+<circle cx="380" cy="106" r="42" fill="#e4ebf4" stroke="#50647d" stroke-width="5"/><circle cx="380" cy="106" r="7" fill="#647995"/>
+<path id="rope" class="path-string" d=""/>
+<g id="left-group"><rect id="left-block" fill="#5b96d6" stroke="#2c5b96" stroke-width="2.5" rx="5"/><text id="left-name" class="block-label" text-anchor="middle">m₁</text></g>
+<g id="right-group"><rect id="right-block" fill="#e5ab62" stroke="#b87a30" stroke-width="2.5" rx="5"/><text id="right-name" class="block-label" text-anchor="middle">m₂</text></g>
+<g id="forces"></g><g id="kinematics"></g>
+<line x1="75" y1="497" x2="685" y2="497" stroke="#d7e1ec" stroke-width="2" stroke-dasharray="7 6"/>
+</svg>
+<div class="stage-foot" id="vector-options" hidden><div class="legend"><span><i class="dot" style="background:var(--red)"></i>Peso <em>P</em></span><span><i class="dot" style="background:var(--blue)"></i>Tensione <em>T</em></span><span><i class="dot" style="background:var(--green)"></i>Accelerazione <em>a</em></span></div><span class="key">Le forze partono dal punto materiale · scala comune</span></div>
+<div class="controls"><button id="play" class="btn primary">▶ Avvia</button><button id="reset" class="btn">↺ Ripristina</button><button id="step" class="btn">+ 0,1 s</button><input id="timeline" type="range" min="0" max="12" value="0" step="0.01" aria-label="Tempo della simulazione"/><span class="time" id="clock">t = 0,00 s</span></div>
+<div id="boundary-note" class="notice">Il moto si arresta al limite della corsa disponibile: il modello non include urti con il pavimento.</div>
+</section>
+<div class="side">
+<section class="card param"><h2>Parametri e visualizzazione</h2>
+<div class="control-row"><label for="m1">m₁</label><input id="m1-slider" type="range" min="0.5" max="10" step="0.1" value="2"/><div><input id="m1" type="number" min="0.5" max="10" step="0.1" value="2" aria-label="Massa uno in chilogrammi"/><span class="unit">kg</span></div></div>
+<div class="control-row"><label for="m2">m₂</label><input id="m2-slider" type="range" min="0.5" max="10" step="0.1" value="3"/><div><input id="m2" type="number" min="0.5" max="10" step="0.1" value="3" aria-label="Massa due in chilogrammi"/><span class="unit">kg</span></div></div>
+<div class="switches"><label><input id="showP" type="checkbox" checked/> Peso</label><label><input id="showT" type="checkbox" checked/> Tensione</label><label><input id="showA" type="checkbox"/> Accelerazione (indicatore separato)</label><label><input id="showNumbers" type="checkbox" checked/> Mostra valori calcolati</label></div>
+<p class="note">La <strong>superficie</strong> di ogni blocco è proporzionale alla sua massa. Cambiare massa ripristina la simulazione.</p>
+</section>
+<section class="card"><h2>Sistema delle equazioni</h2><div class="eq"><div class="eq-row"><svg class="brace-svg" viewBox="0 0 26 100" preserveAspectRatio="none" aria-hidden="true"><path d="M23 1 C9 1 10 15 10 25 V38 C10 47 6 50 2 50 C6 50 10 53 10 62 V75 C10 85 9 99 23 99"/></svg><div class="lines"><div><i>T</i> − <i>m</i>₁<i>g</i> = <i>m</i>₁<i>a</i></div><div><i>m</i>₂<i>g</i> − <i>T</i> = <i>m</i>₂<i>a</i></div></div></div></div><p class="note">Versi positivi: verso l'alto per m₁, verso il basso per m₂. La grandezza <i>a</i> è algebrica e può essere negativa.</p></section>
+<section class="card"><h2>Sistema risolto</h2><div class="eq"><div class="eq-row"><svg class="brace-svg" viewBox="0 0 26 100" preserveAspectRatio="none" aria-hidden="true"><path d="M23 1 C9 1 10 15 10 25 V38 C10 47 6 50 2 50 C6 50 10 53 10 62 V75 C10 85 9 99 23 99"/></svg><div class="lines solved-lines"><div class="formula"><i>a</i> = <span class="fraction"><span class="num">(<i>m</i>₂ − <i>m</i>₁)<i>g</i></span><span class="den"><i>m</i>₁ + <i>m</i>₂</span></span></div><div class="formula"><i>T</i> = <span class="fraction"><span class="num">2<i>m</i>₁<i>m</i>₂<i>g</i></span><span class="den"><i>m</i>₁ + <i>m</i>₂</span></span></div></div></div></div><div id="computed" class="values"><div class="value"><span>Accelerazione a</span><b id="aVal">—</b></div><div class="value"><span>Tensione T</span><b id="tVal">—</b></div><div class="value"><span>Velocità v₂</span><b id="vVal">—</b></div><div class="value"><span>Spostamento s₂</span><b id="sVal">—</b></div></div><p class="note" id="interpretation"></p></section>
+</div>
+</main><p class="footer">Condizioni iniziali: corpi fermi, fune sempre tesa e inestensibile, carrucola priva di massa e attrito. I vettori hanno la coda sul blocco; le lunghezze di peso e tensione condividono una scala grafica, indipendente da quella dell'accelerazione.</p>
+</div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg', g=9.81;
+let m1=2,m2=3,t=0,playing=false,lastStamp=null,viewMode="motion";
+const x1=338,x2=422, pulY=106,r=42, baseY=290, maxTravel=115;
+const fmt=(x,n=2)=>x.toLocaleString('it-IT',{minimumFractionDigits:n,maximumFractionDigits:n});
+const accel=()=>((m2-m1)*g/(m1+m2)),tension=()=>2*m1*m2*g/(m1+m2);
+const dimensions=m=>{let side=28*Math.sqrt(m);return {w:Math.max(20,side),h:Math.max(20,side)}};
+const getLimit=()=>{let a=Math.abs(accel());return a<1e-10?12:Math.min(12,Math.sqrt(2*maxTravel/(a*22)));}; // pixels/metre conversion 22
+const motion=()=>({a:accel(),s:.5*accel()*t*t,v:accel()*t});
+function el(name,attrs,parent){const e=document.createElementNS(NS,name);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,String(v)));parent.appendChild(e);return e;}
+function arrow(parent,x,y,dy,color,text,labelSide){
+  if(Math.abs(dy)<.1)return;
+  el('line',{x1:x,y1:y,x2:x,y2:y+dy,stroke:color,'class':'arrow',
+     'marker-end':color==='#da4656'?'url(#arrow-red)':color==='#2867c5'?'url(#arrow-blue)':'url(#arrow-green)'},parent);
+  const label=el('text',{x:x+(labelSide<0?-15:15),y:y+dy/2+6,fill:color,
+     'class':'svg-text','text-anchor':labelSide<0?'end':'start'},parent);
+  label.textContent=text;
+}
+function draw(){const {a,s,v}=motion(),move=s*22, d1=dimensions(m1),d2=dimensions(m2),cy1=baseY-move,cy2=baseY+move;
+const l=$('left-block'),rr=$('right-block');l.setAttribute('x',x1-d1.w/2);l.setAttribute('y',cy1-d1.h/2);l.setAttribute('width',d1.w);l.setAttribute('height',d1.h);rr.setAttribute('x',x2-d2.w/2);rr.setAttribute('y',cy2-d2.h/2);rr.setAttribute('width',d2.w);rr.setAttribute('height',d2.h);
+$('left-name').setAttribute('x',x1);$('left-name').setAttribute('y',cy1+7);$('right-name').setAttribute('x',x2);$('right-name').setAttribute('y',cy2+7);
+$('rope').setAttribute('d',`M ${x1} ${cy1-d1.h/2} V ${pulY} A ${r} ${r} 0 0 1 ${x2} ${pulY} V ${cy2-d2.h/2}`);
+const forces=$('forces'),k=$('kinematics');forces.replaceChildren();k.replaceChildren();
+if(viewMode==='forces'){
+  const maxForce=Math.max(m1*g,m2*g,tension()),forceScale=105/maxForce;
+  for(const b of [{cx:x1,cy:cy1,m:m1,id:1},{cx:x2,cy:cy2,m:m2,id:2}]){
+    // Punto materiale esattamente al centro della sagoma del blocco.
+    const suffix=b.id===1?'₁':'₂';
+    // Le forze iniziano entrambe dal punto e hanno versi opposti.
+    if($('showP').checked)arrow(forces,b.cx,b.cy,b.m*g*forceScale,'#da4656','P'+suffix,b.id===1?-1:1);
+    if($('showT').checked)arrow(forces,b.cx,b.cy,-tension()*forceScale,'#2867c5','T',b.id===1?-1:1);
+    el('circle',{cx:b.cx,cy:b.cy,r:5.5,fill:'#1b2e49',stroke:'#fff','stroke-width':1.4},forces);
+    const name=el('text',{x:b.cx+(b.id===1?-15:15),y:b.cy+19,'text-anchor':b.id===1?'end':'start',fill:'#23354c','class':'svg-text'},forces);
+    name.textContent='m'+suffix;
+    // Accelerazione: facoltativa, volutamente distanziata dalle forze.
+    if($('showA').checked && Math.abs(a)>1e-9){
+      const sign=b.id===1?-Math.sign(a):Math.sign(a),offset=b.id===1?-60:60;
+      const len=35+Math.min(42,Math.abs(a)*5);
+      arrow(k,b.cx+offset,b.cy,sign*len,'#168665','a',b.id===1?-1:1);
+      el('line',{x1:b.cx+(b.id===1?-8:8),y1:b.cy,x2:b.cx+offset,y2:b.cy,stroke:'#168665','stroke-width':1.2,'stroke-dasharray':'3 5',opacity:.4},k);
+    }
+  }
+}
+$('clock').textContent='t = '+fmt(t)+' s';$('timeline').max=String(getLimit());$('timeline').value=String(t);
+$('aVal').textContent=fmt(a)+' m/s²';$('tVal').textContent=fmt(tension())+' N';$('vVal').textContent=fmt(v)+' m/s';$('sVal').textContent=fmt(s)+' m';
+$('computed').style.display=$('showNumbers').checked?'grid':'none';
+$('interpretation').textContent=Math.abs(a)<1e-10?'Le masse sono uguali: con partenza da fermo, il sistema resta fermo.':a>0?'m₂ scende e m₁ sale.':'m₁ scende e m₂ sale. I valori algebrici di a, v₂ e s₂ sono negativi.';
+$('boundary-note').classList.toggle('visible',t>=getLimit()-.000001&&getLimit()<11.999);
+}
+function pause(){playing=false;lastStamp=null;$('play').textContent='▶ Avvia'}
+function reset(){pause();t=0;draw()}
+function tick(stamp){if(!playing)return;if(lastStamp!==null){t=Math.min(getLimit(),t+Math.min((stamp-lastStamp)/1000,.07));draw();if(t>=getLimit()-1e-9){pause();return}}lastStamp=stamp;requestAnimationFrame(tick)}
+$('play').addEventListener('click',()=>{if(playing){pause();return}if(t>=getLimit()-.00001)t=0;playing=true;lastStamp=null;$('play').textContent='Ⅱ Pausa';requestAnimationFrame(tick)});
+$('reset').addEventListener('click',reset);$('step').addEventListener('click',()=>{pause();t=Math.min(getLimit(),t+.1);draw()});$('timeline').addEventListener('input',e=>{pause();t=Number(e.target.value);draw()});
+for(const id of ['m1','m2']){const input=$(id),slider=$(id+'-slider');function change(val){const num=Number(val);if(!Number.isFinite(num)||num<.5||num>10)return;input.value=num;slider.value=num;if(id==='m1')m1=num;else m2=num;reset()}input.addEventListener('change',e=>change(e.target.value));slider.addEventListener('input',e=>change(e.target.value));}
+for(const id of ['showP','showT','showA','showNumbers'])$(id).addEventListener('change',draw);
+function setMode(mode){viewMode=mode;$('scene').setAttribute('class',mode==='motion'?'motion-view':'force-view');
+ $('motionMode').setAttribute('aria-pressed',String(mode==='motion'));
+ $('forcesMode').setAttribute('aria-pressed',String(mode==='forces'));
+ $('vector-options').hidden=mode==='motion';
+ $('mode-caption').textContent=mode==='motion'?'Osserva il movimento dei due blocchi collegati dalla fune.':'I blocchi e la fune diventano traslucidi; ogni massa è un punto materiale con le forze applicate nel centro.';
+ draw();}
+$('motionMode').addEventListener('click',()=>setMode('motion'));
+$('forcesMode').addEventListener('click',()=>setMode('forces'));
+draw();
+})();
+</script></body></html>
