@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Due casse sovrapposte — Laboratorio 3A (v6)</title>
+<style>
+:root{--ink:#17243a;--muted:#64748b;--border:#dce4ee;--bg:#f4f7fb;--card:#fff;--green:#168665;--purple:#8054b0;--amber:#b7791f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.shell{max-width:1350px;margin:auto;padding:18px 20px 30px}.top{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}.top h1{font-size:clamp(23px,2.5vw,31px);margin:0}.top p{color:var(--muted);margin:4px 0 16px}.tag{color:var(--muted);font-size:13px}.layout{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(320px,1fr);gap:16px;align-items:start}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 3px 12px #17304d08;padding:17px}.card h2{font-size:17px;margin:0 0 11px}.stage{padding:12px 12px 14px}.stage svg{width:100%;height:auto;display:block;touch-action:pan-y}.stage-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:5px 6px}.legend{display:flex;gap:12px;flex-wrap:wrap;color:#526277;font-size:13px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}.controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:8px 5px 0}.btn{appearance:none;border:1px solid #cfd9e6;background:#fff;color:var(--ink);border-radius:9px;padding:9px 14px;min-height:41px;cursor:pointer;font-weight:650}.btn.primary{background:#1c487e;border-color:#1c487e;color:#fff}.controls input[type=range]{flex:1;min-width:90px}.time{font-variant-numeric:tabular-nums;color:#526277;font-size:14px}.side{display:grid;gap:16px}.control-row{display:grid;grid-template-columns:40px 1fr 96px;align-items:center;gap:10px;margin:9px 0}.control-row label{font-weight:650}.control-row input[type=range]{width:100%;accent-color:#24548f}.control-row input[type=number]{width:100%;padding:8px;border:1px solid #cdd7e3;border-radius:8px;font:inherit}.unit{color:var(--muted);font-size:12px}.switches{display:flex;flex-wrap:wrap;gap:10px 16px;margin:13px 0 0}.switches label{font-size:14px;white-space:nowrap}.switches input{accent-color:#235a9e}.note{font-size:13px;color:var(--muted);margin:10px 0 0}.footer{margin:13px 3px;color:var(--muted);font-size:13px}.svg-text{font:italic 21px Georgia,'Times New Roman',serif;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}.block-label{font:italic 24px Georgia,'Times New Roman',serif;fill:#fff}.arrow{stroke-width:2.35;stroke-linecap:round}.view-tabs{display:flex;gap:5px;background:#eef3f9;padding:5px;border-radius:11px;margin:0 0 12px}.view-btn{flex:1;min-height:42px;padding:8px 11px;border:0;border-radius:8px;background:transparent;color:#40516b;font:inherit;font-weight:650;cursor:pointer}.view-btn[aria-pressed="true"]{background:white;color:#17497f;box-shadow:0 1px 5px #20395320}#scene.force-view #lower-block,#scene.force-view #upper-block,#scene.force-view #ground,#scene.force-view #force-arrow-visual{opacity:.12}#scene.force-view #lower-label,#scene.force-view #upper-label{opacity:0}#scene.motion-view #forces,#scene.motion-view #kinematics,#scene.motion-view #points{display:none}#mode-caption{font-size:13px;color:var(--muted);margin:0 3px 8px;min-height:19px}#vector-options[hidden]{display:none}.values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.value{background:#f7f9fc;padding:9px 10px;border-radius:9px}.value b{display:block;font-size:18px;font-variant-numeric:tabular-nums}.value span{font-size:12px;color:var(--muted)}.value .detail{display:block;margin-top:5px;font-size:12px;line-height:1.35;color:#506176}.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;font-weight:700;font-size:14px;background:#eef7ff;color:#145288;border:1px solid #d7e8fb}.badge.slip{background:#fff6e8;color:#935c05;border-color:#f1d9ac}.badge-stick{background:#edf8f1;color:#14663f;border-color:#caecd8}.rule-box{margin-top:10px;padding:11px 12px;border-radius:11px;background:#f5f8fd;border:1px solid #e1e9f5}.rule-box p{margin:6px 0;font-size:14px}.eq{background:#f5f8fd;border:1px solid #e1e9f5;border-radius:11px;padding:13px 14px;margin-top:8px}.eq-row{display:flex;align-items:stretch;gap:14px;margin:5px 0}.brace-svg{width:27px;min-width:27px;align-self:stretch;overflow:visible}.brace-svg path{fill:none;stroke:#283d57;stroke-width:2.7;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}.lines{display:grid;gap:12px;padding:8px 0;font-family:Georgia,'Times New Roman',serif;font-size:19px}.formula{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:5px 0;font-family:Georgia,'Times New Roman',serif;font-size:19px}.fraction{display:inline-flex;flex-direction:column;align-items:center;text-align:center;line-height:1.25}.fraction .num{padding:0 7px 3px;border-bottom:1.5px solid currentColor}.fraction .den{padding:3px 7px 0}.case-label{font-size:13px;font-weight:700;color:#405875;margin-bottom:3px}.notice{margin-top:10px;padding:9px 11px;background:#fff6e5;border:1px solid #f2d6a6;border-radius:8px;color:#79551d;font-size:13px;display:none}.notice.visible{display:block}.key{color:var(--muted);font-size:13px}@media(max-width:900px){.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.side .full{grid-column:1/-1}}@media(max-width:650px){.shell{padding:12px}.card{padding:13px}.side{grid-template-columns:1fr}.svg-text{font-size:22px}.controls{gap:7px}.btn{padding:9px 11px}.view-btn{font-size:13px}}
+
+/* Formule simboliche, sostituzione numerica e risultato con identica dignità grafica. */
+.calculations{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+.calculation{background:#f5f8fd;border:1px solid #e1e9f5;border-radius:11px;padding:12px 14px;min-width:0}
+.calc-heading{font-size:13px;font-weight:700;color:#405875;margin-bottom:7px}
+.calc-equation{display:flex;align-items:center;gap:6px 9px;flex-wrap:wrap;font-family:Georgia,'Times New Roman',serif;font-size:clamp(16px,1.65vw,20px);line-height:1.4;color:#17243a}
+.calc-equation .equals{font-family:Georgia,'Times New Roman',serif;color:#51617a;font-weight:600}
+.calc-equation .final-result{font-family:Georgia,'Times New Roman',serif;font-size:1.04em;font-weight:700;color:#17497f;white-space:nowrap}
+.calc-equation .fraction{font-size:.94em}
+.calc-equation sub,.calc-equation sup{font-size:.68em;line-height:0}
+@media(max-width:650px){.calc-equation{font-size:17px}.calculation{padding:12px}}
+
+/* Versione 6: scena a sinistra, parametri + equazioni a destra, soluzione a tutta larghezza */
+:root{--mass-one:#286db0;--mass-two:#bb741f;--applied-force:#b7791f}
+.layout{grid-template-columns:minmax(0,1.75fr) minmax(320px,1fr);align-items:start}
+.results-card{grid-column:1/-1;padding:22px 25px}
+.side{display:grid;grid-template-columns:1fr;gap:16px}
+.results-card .rule-box{max-width:none}
+.results-card .calculations{grid-template-columns:1fr;gap:9px}
+.results-card .calculation{display:grid;grid-template-columns:minmax(175px,240px) minmax(0,1fr);align-items:center;column-gap:20px;padding:13px 17px}
+.results-card .calc-heading{margin:0;font-size:14px}
+.results-card .calc-equation{font-size:clamp(19px,1.8vw,25px);gap:10px 14px;flex-wrap:nowrap;white-space:nowrap;overflow-x:auto;padding:4px 1px 7px;scrollbar-width:thin}
+.results-card .calc-equation>span{flex:none}
+.math-m1,.math-m1 i{color:var(--mass-one)}
+.math-m2,.math-m2 i{color:var(--mass-two)}
+.math-F,.math-F i{color:var(--applied-force)}
+.color-m1{color:var(--mass-one)}.color-m2{color:var(--mass-two)}.color-F{color:var(--applied-force)}
+.control-row label[for="m1"]{color:var(--mass-one)}.control-row label[for="m2"]{color:var(--mass-two)}.control-row label[for="F"]{color:var(--applied-force)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.side .full{grid-column:auto}.results-card{grid-column:1}}
+@media(max-width:650px){.side{grid-template-columns:1fr}.results-card{padding:15px}.results-card .calculation{display:block;padding:12px}.results-card .calc-heading{margin-bottom:6px}.results-card .calc-equation{font-size:19px}.results-card .calculations{gap:10px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top">
+  <div><h1>Due casse sovrapposte</h1><p>Dinamica dei sistemi · Classe 3A · piano orizzontale senza attrito</p></div>
+  <div class="tag">Tra le casse: attrito statico e dinamico · g = 9,81 m/s²</div>
+</header>
+<main class="layout">
+<section class="card stage">
+  <div class="view-tabs" role="group" aria-label="Modalità di visualizzazione">
+    <button type="button" class="view-btn" id="motionMode" aria-pressed="true">▶ Moto</button>
+    <button type="button" class="view-btn" id="forcesMode" aria-pressed="false">↗ Diagrammi delle forze</button>
+  </div>
+  <p id="mode-caption">Osserva il moto delle due casse quando si applica una forza orizzontale alla cassa inferiore.</p>
+  <svg id="scene" class="motion-view" viewBox="0 0 760 500" role="img" aria-label="Due casse sovrapposte su un piano orizzontale con diagramma delle forze">
+    <defs>
+      <marker id="arrow-green" markerWidth="5.4" markerHeight="5.4" refX="4.6" refY="2.4" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L5 2.4 L0 4.8 Z" fill="#168665"/></marker>
+      <marker id="arrow-purple" markerWidth="5.4" markerHeight="5.4" refX="4.6" refY="2.4" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L5 2.4 L0 4.8 Z" fill="#8054b0"/></marker>
+      <marker id="arrow-amber" markerWidth="5.4" markerHeight="5.4" refX="4.6" refY="2.4" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L5 2.4 L0 4.8 Z" fill="#b7791f"/></marker>
+    </defs>
+    <rect x="1" y="1" width="758" height="498" fill="#fbfdff" rx="9"/>
+    <line id="ground" x1="45" y1="400" x2="715" y2="400" stroke="#67788d" stroke-width="4"/>
+    <line x1="45" y1="418" x2="715" y2="418" stroke="#d7e1ec" stroke-width="2" stroke-dasharray="7 6"/>
+    <rect id="lower-block" fill="#5b96d6" stroke="#2c5b96" stroke-width="2.5" rx="6"/>
+    <text id="lower-label" class="block-label" text-anchor="middle">m₁</text>
+    <rect id="upper-block" fill="#e5ab62" stroke="#b87a30" stroke-width="2.5" rx="6"/>
+    <text id="upper-label" class="block-label" text-anchor="middle">m₂</text>
+    <g id="force-arrow-visual"></g>
+    <g id="points"></g>
+    <g id="forces"></g>
+    <g id="kinematics"></g>
+  </svg>
+  <div class="stage-foot" id="vector-options" hidden>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--purple)"></i>Attriti</span>
+      <span><i class="dot" style="background:var(--amber)"></i>Forza <em>F</em></span>
+      <span><i class="dot" style="background:var(--green)"></i>Accelerazioni</span>
+    </div>
+    <span class="key">Nel diagramma i corpi sono trattati come punti materiali: i vettori hanno la coda nei punti neri.</span>
+  </div>
+  <div class="controls">
+    <button id="play" class="btn primary">▶ Avvia</button>
+    <button id="reset" class="btn">↺ Ripristina</button>
+    <button id="step" class="btn">+ 0,1 s</button>
+    <input id="timeline" type="range" min="0" max="8" value="0" step="0.01" aria-label="Tempo della simulazione"/>
+    <span class="time" id="clock">t = 0,00 s</span>
+  </div>
+  <div id="boundary-note" class="notice">La simulazione si arresta prima che i corpi escano dalla scena o che la cassa superiore perda completamente l'appoggio.</div>
+</section>
+<div class="side">
+  <section class="card full"><h2>Parametri e visualizzazione</h2>
+    <div class="control-row"><label for="m1">m₁</label><input id="m1-slider" type="range" min="0.5" max="12" step="0.1" value="4"/><div><input id="m1" type="number" min="0.5" max="12" step="0.1" value="4"/><span class="unit">kg</span></div></div>
+    <div class="control-row"><label for="m2">m₂</label><input id="m2-slider" type="range" min="0.5" max="12" step="0.1" value="2"/><div><input id="m2" type="number" min="0.5" max="12" step="0.1" value="2"/><span class="unit">kg</span></div></div>
+    <div class="control-row"><label for="F">F</label><input id="F-slider" type="range" min="0" max="60" step="0.5" value="18"/><div><input id="F" type="number" min="0" max="60" step="0.5" value="18"/><span class="unit">N</span></div></div>
+    <div class="switches">
+      <label><input id="showf" type="checkbox" checked/> Attriti</label>
+      <label><input id="showF" type="checkbox" checked/> Forza applicata</label>
+      <label><input id="showA" type="checkbox"/> Accelerazioni</label>
+      <label><input id="showNumbers" type="checkbox" checked/> Mostra valori calcolati</label>
+    </div>
+    <p class="note">Cassa inferiore: <strong class="color-m1">m₁</strong>; cassa superiore: <strong class="color-m2">m₂</strong>. Coefficienti fissati: <strong>μ_s = 0,40</strong>, <strong>μ_d = 0,30</strong>. La base della cassa inferiore è volutamente più ampia, così lo slittamento resta visibile più a lungo.</p>
+  </section>
+
+  <section class="card"><h2>Sistema delle equazioni</h2>
+    <div class="case-label" id="equationCase">Aderenza · accelerazione comune a</div>
+    <div class="eq"><div class="eq-row"><svg class="brace-svg" viewBox="0 0 26 100" preserveAspectRatio="none" aria-hidden="true"><path d="M23 1 C9 1 10 15 10 25 V38 C10 47 6 50 2 50 C6 50 10 53 10 62 V75 C10 85 9 99 23 99"/></svg><div class="lines" id="lawLines"><div><span class="math-F"><i>F</i></span> − <i>F</i><sub>s</sub> = <span class="math-m1"><i>m</i><sub>1</sub></span><i>a</i></div><div><i>F</i><sub>s</sub> = <span class="math-m2"><i>m</i><sub>2</sub></span><i>a</i></div></div></div></div>
+    <p class="note">Equazioni lungo l'asse orizzontale, positivo verso destra. Le forze verticali si equilibrano e qui non sono rappresentate.</p>
+  </section>
+
+
+</div>
+  <section class="card results-card"><h2>Stato del contatto e sistema risolto</h2>
+    <div id="regimeBadge" class="badge badge-stick">Aderenza</div>
+    <div class="rule-box">
+      <p><strong>Criterio del modello</strong></p>
+      <p>Si confronta la forza di attrito richiesta per trascinare la cassa superiore con il valore massimo dell'attrito statico.</p>
+      <p id="ruleText">Se l'attrito statico disponibile è sufficiente, le due casse si muovono insieme.</p>
+    </div>
+
+    <div class="case-label" id="solutionCase" style="margin-top:14px">Aderenza</div>
+    <div id="computed" class="calculations" aria-live="off">
+      <div class="calculation"><div class="calc-heading">Forza critica</div><div class="calc-equation" id="fCritFormula"></div></div>
+      <div class="calculation"><div class="calc-heading">Accelerazione massima per l’aderenza</div><div class="calc-equation" id="aMaxFormula"></div></div>
+      <div class="calculation"><div class="calc-heading">Accelerazione cassa inferiore <span class="color-m1">m₁</span></div><div class="calc-equation" id="a1Formula"></div></div>
+      <div class="calculation"><div class="calc-heading">Accelerazione cassa superiore <span class="color-m2">m₂</span></div><div class="calc-equation" id="a2Formula"></div></div>
+      <div class="calculation"><div class="calc-heading" id="fricLabel">Forza di attrito statico</div><div class="calc-equation" id="fReqFormula"></div></div>
+    </div>
+    <p class="note" id="interpretation"></p>
+  </section>
+</main>
+<p class="footer">Condizioni del modello: il piano di appoggio è privo di attrito; l'attrito agisce solo tra le due casse. Se l'attrito statico basta, le casse hanno la stessa accelerazione. Se non basta, entra in gioco l'attrito dinamico e le accelerazioni diventano diverse.</p>
+</div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg', g=9.81, muS=0.40, muD=0.30;
+let m1=4,m2=2,F=18,t=0,playing=false,lastStamp=null,viewMode='motion';
+const groundY=400, xStart=190, stageRight=720, scale=7.5;
+const fmt=(x,n=2)=>x.toLocaleString('it-IT',{minimumFractionDigits:n,maximumFractionDigits:n});
+function dims(m,lower=false){if(lower)return {w:190+10*m,h:54+1.7*m};return {w:68+5*m,h:42+1.8*m};}
+function state(){
+  const fCrit=muS*(m1+m2)*g;
+  const stick=F<=fCrit+1e-9;
+  if(stick){const a=F/(m1+m2); const fReq=m2*a; return {stick,fCrit,fReq,a1:a,a2:a};}
+  const Fd=muD*m2*g; return {stick,fCrit,fReq:Fd,a1:(F-Fd)/m1,a2:Fd/m2};
+}
+function positions(){const s=state(); return {x1:xStart+0.5*s.a1*t*t*scale,x2:xStart+0.5*s.a2*t*t*scale};}
+function getLimit(){
+  const s=state(), d1=dims(m1,true), d2=dims(m2);
+  const aMax=Math.max(Math.abs(s.a1),Math.abs(s.a2)); if(aMax<1e-9)return 12;
+  const maxGroundMove=((stageRight-(xStart+d1.w/2))-10)/scale;
+  const maxTopMove=((stageRight-(xStart+d2.w/2))-10)/scale;
+  const tGround=Math.sqrt(Math.max(0,2*maxGroundMove/Math.max(Math.abs(s.a1),1e-9)));
+  const tTop=Math.sqrt(Math.max(0,2*maxTopMove/Math.max(Math.abs(s.a2),1e-9)));
+  let tRel=12;
+  if(!s.stick && s.a1>s.a2+1e-9){const maxRel=((d1.w+d2.w)/2)*0.92/scale; const relA=s.a1-s.a2; tRel=Math.sqrt(Math.max(0,2*maxRel/relA));}
+  return Math.max(0.6,Math.min(12,tGround,tTop,tRel));
+}
+function el(name,attrs,parent){const e=document.createElementNS(NS,name);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,String(v));parent.appendChild(e);return e;}
+function arrow(parent,x,y,dx,dy,color,text,anchor='middle',tx=0,ty=0){
+  if(Math.hypot(dx,dy)<.1)return;
+  const map={'#168665':'url(#arrow-green)','#8054b0':'url(#arrow-purple)','#b7791f':'url(#arrow-amber)'};
+  el('line',{x1:x,y1:y,x2:x+dx,y2:y+dy,stroke:color,'class':'arrow','marker-end':map[color]},parent);
+  const txt=el('text',{x:x+dx/2+tx,y:y+dy/2+ty,fill:color,'class':'svg-text','text-anchor':anchor},parent);
+  const match=/^F_([sd])$/.exec(text);
+  if(match){el('tspan',{},txt).textContent='F';el('tspan',{'baseline-shift':'sub','font-size':'66%'},txt).textContent=match[1];}
+  else txt.textContent=text;
+}
+function updateEquationPanels(s){
+  $('equationCase').textContent=s.stick?'Aderenza · accelerazione comune a':'Slittamento · accelerazioni distinte a₁ e a₂';
+  $('solutionCase').textContent=s.stick?'Aderenza':'Slittamento';
+  $('lawLines').innerHTML=s.stick
+    ?'<div><span class="math-F"><i>F</i></span> − <i>F</i><sub>s</sub> = <span class="math-m1"><i>m</i><sub>1</sub></span><i>a</i></div><div><i>F</i><sub>s</sub> = <span class="math-m2"><i>m</i><sub>2</sub></span><i>a</i></div>'
+    :'<div><span class="math-F"><i>F</i></span> − <i>F</i><sub>d</sub> = <span class="math-m1"><i>m</i><sub>1</sub></span><i>a</i><sub>1</sub></div><div><i>F</i><sub>d</sub> = <span class="math-m2"><i>m</i><sub>2</sub></span><i>a</i><sub>2</sub></div>';
+}
+function c1(v){return '<span class="math-m1">'+v+'</span>'; }
+function c2(v){return '<span class="math-m2">'+v+'</span>'; }
+function cf(v){return '<span class="math-F">'+v+'</span>'; }
+function frac(num,den){return '<span class="fraction"><span class="num">'+num+'</span><span class="den">'+den+'</span></span>';}
+function formula(id,symbolic,substitution,result,unit){
+  $(id).innerHTML='<span>'+symbolic+'</span><span class="equals">=</span><span>'+substitution+'</span><span class="equals">=</span><strong class="final-result">'+fmt(result)+' '+unit+'</strong>';
+}
+
+function draw(){
+  const s=state(), p=positions(), d1=dims(m1,true), d2=dims(m2);
+  updateEquationPanels(s);
+  const x1=p.x1, x2=p.x2;
+  $('lower-block').setAttribute('x',x1-d1.w/2); $('lower-block').setAttribute('y',groundY-d1.h); $('lower-block').setAttribute('width',d1.w); $('lower-block').setAttribute('height',d1.h);
+  $('upper-block').setAttribute('x',x2-d2.w/2); $('upper-block').setAttribute('y',groundY-d1.h-d2.h); $('upper-block').setAttribute('width',d2.w); $('upper-block').setAttribute('height',d2.h);
+  $('lower-label').setAttribute('x',x1); $('lower-label').setAttribute('y',groundY-d1.h/2+8);
+  $('upper-label').setAttribute('x',x2); $('upper-label').setAttribute('y',groundY-d1.h-d2.h/2+8);
+  const lowerPt={x:x1,y:groundY-d1.h/2}, upperPt={x:x2,y:groundY-d1.h-d2.h/2};
+  const points=$('points'), forces=$('forces'), kin=$('kinematics'), visual=$('force-arrow-visual'); points.replaceChildren(); forces.replaceChildren(); kin.replaceChildren(); visual.replaceChildren();
+  if(viewMode==='motion' && $('showF').checked && F>0) arrow(visual,x1+d1.w/2+8,groundY-d1.h/2,Math.min(110,28+1.2*F),0,'#b7791f','F','middle',0,-12);
+  // Una sola scala grafica stabile per la visualizzazione: crescite visibili al variare di F.
+  const forceLength = magnitude => 35 + 2.25*magnitude;
+  if(viewMode==='forces'){
+    for(const pnt of [lowerPt,upperPt]) el('circle',{cx:pnt.x,cy:pnt.y,r:5.5,fill:'#1b2e49',stroke:'#fff','stroke-width':1.4},points);
+    const name1=el('text',{x:lowerPt.x-16,y:lowerPt.y+22,'text-anchor':'end',fill:'#23354c','class':'svg-text'},points); name1.textContent='m₁';
+    const name2=el('text',{x:upperPt.x+16,y:upperPt.y+22,'text-anchor':'start',fill:'#23354c','class':'svg-text'},points); name2.textContent='m₂';
+    if($('showf').checked && s.fReq>0.001){
+      const lenf=forceLength(s.fReq);
+      arrow(forces,lowerPt.x,lowerPt.y,-lenf,0,'#8054b0',s.stick?'F_s':'F_d','middle',0,-13);
+      arrow(forces,upperPt.x,upperPt.y,lenf,0,'#8054b0',s.stick?'F_s':'F_d','middle',0,-13);
+    }
+    if($('showF').checked && F>0.001){const lenF=forceLength(F); arrow(forces,lowerPt.x,lowerPt.y,lenF,0,'#b7791f','F','middle',0,-13);}
+    if($('showA').checked){
+      const lenA1=Math.min(122,44+10*Math.abs(s.a1)); const lenA2=Math.min(122,44+10*Math.abs(s.a2));
+      if(Math.abs(s.a1)>1e-9) arrow(kin,lowerPt.x,lowerPt.y+50,lenA1,0,'#168665','a₁','middle',0,-12);
+      if(Math.abs(s.a2)>1e-9) arrow(kin,upperPt.x,upperPt.y-50,lenA2,0,'#168665',s.stick?'a':'a₂','middle',0,-12);
+    }
+  }
+  $('clock').textContent='t = '+fmt(t)+' s'; $('timeline').max=String(getLimit()); $('timeline').value=String(t);
+  const aMax = muS*g, Fd = muD*m2*g;
+  const ma='<span class="math-m1"><i>m</i><sub>1</sub></span>', mb='<span class="math-m2"><i>m</i><sub>2</sub></span>';
+  const fl='<span class="math-F"><i>F</i></span>', fs='<i>F</i><sub>s</sub>', fd='<i>F</i><sub>d</sub>';
+  const mu_s='μ<sub>s</sub>',mu_d='μ<sub>d</sub>', gg='<i>g</i>';
+  formula('fCritFormula',
+    '<i>F</i><sub>crit</sub> = ('+ma+' + '+mb+')'+mu_s+gg,
+    '('+c1(fmt(m1))+' + '+c2(fmt(m2))+') · '+fmt(muS)+' · '+fmt(g),s.fCrit,'N');
+  formula('aMaxFormula',
+    '<i>a</i><sub>max</sub> = '+mu_s+gg,
+    fmt(muS)+' · '+fmt(g),aMax,'m/s²');
+  if(s.stick){
+    const symbolic=frac(fl,ma+' + '+mb);
+    const numeric=frac(cf(fmt(F)),c1(fmt(m1))+' + '+c2(fmt(m2)));
+    formula('a1Formula','<i>a</i> = '+symbolic,numeric,s.a1,'m/s²');
+    formula('a2Formula','<i>a</i> = '+symbolic,numeric,s.a2,'m/s²');
+    $('fricLabel').textContent='Forza di attrito statico';
+    formula('fReqFormula',fs+' = '+mb+'<i>a</i>',c2(fmt(m2))+' · '+frac(cf(fmt(F)),c1(fmt(m1))+' + '+c2(fmt(m2))),s.fReq,'N');
+  }else{
+    formula('a1Formula','<i>a</i><sub>1</sub> = '+frac(fl+' − '+fd,ma),frac(cf(fmt(F))+' − '+fmt(Fd),c1(fmt(m1))),s.a1,'m/s²');
+    formula('a2Formula','<i>a</i><sub>2</sub> = '+mu_d+gg,fmt(muD)+' · '+fmt(g),s.a2,'m/s²');
+    $('fricLabel').textContent='Forza di attrito dinamico';
+    formula('fReqFormula',fd+' = '+mu_d+mb+gg,fmt(muD)+' · '+c2(fmt(m2))+' · '+fmt(g),Fd,'N');
+  }
+  $('computed').style.display=$('showNumbers').checked?'grid':'none';
+  const badge=$('regimeBadge'); badge.textContent=s.stick?'Aderenza':'Slittamento'; badge.className='badge '+(s.stick?'badge-stick':'slip');
+  $('ruleText').textContent=s.stick?'L’attrito statico disponibile è sufficiente: le due casse hanno la stessa accelerazione e si muovono come un unico sistema.':'L’attrito statico massimo non basta: tra le casse c’è scorrimento relativo e interviene l’attrito dinamico.';
+  $('interpretation').textContent=s.stick?'Per questi valori di m₁, m₂ e F le casse restano solidali.':'La cassa inferiore accelera più della superiore: la cassa sopra scivola all’indietro rispetto a quella sotto, pur muovendosi entrambe verso destra.';
+  $('boundary-note').classList.toggle('visible',t>=getLimit()-.000001 && getLimit()<11.999);
+}
+function pause(){playing=false;lastStamp=null;$('play').textContent='▶ Avvia';}
+function reset(){pause();t=0;draw();}
+function tick(stamp){if(!playing)return; if(lastStamp!==null){t=Math.min(getLimit(),t+Math.min((stamp-lastStamp)/1000,.07)); draw(); if(t>=getLimit()-1e-9){pause(); return;}} lastStamp=stamp; requestAnimationFrame(tick);}
+$('play').addEventListener('click',()=>{if(playing){pause();return;} if(t>=getLimit()-.00001)t=0; playing=true; lastStamp=null; $('play').textContent='Ⅱ Pausa'; requestAnimationFrame(tick);});
+$('reset').addEventListener('click',reset); $('step').addEventListener('click',()=>{pause(); t=Math.min(getLimit(),t+.1); draw();}); $('timeline').addEventListener('input',e=>{pause(); t=Number(e.target.value); draw();});
+for(const id of ['m1','m2','F']){const input=$(id), slider=$(id+'-slider'); const lo=Number(slider.min), hi=Number(slider.max); function change(val){const num=Number(val); if(!Number.isFinite(num)||num<lo||num>hi)return; input.value=num; slider.value=num; if(id==='m1')m1=num; else if(id==='m2')m2=num; else F=num; reset();} input.addEventListener('change',e=>change(e.target.value)); slider.addEventListener('input',e=>change(e.target.value));}
+for(const id of ['showf','showF','showA','showNumbers']) $(id).addEventListener('change',draw);
+function setMode(mode){viewMode=mode; $('scene').setAttribute('class',mode==='motion'?'motion-view':'force-view'); $('motionMode').setAttribute('aria-pressed',String(mode==='motion')); $('forcesMode').setAttribute('aria-pressed',String(mode==='forces')); $('vector-options').hidden=mode==='motion'; $('mode-caption').textContent=mode==='motion'?'Osserva il moto delle due casse quando si applica una forza orizzontale alla cassa inferiore.':'I corpi diventano traslucidi; al loro posto compaiono i punti materiali con i vettori applicati.'; draw();}
+$('motionMode').addEventListener('click',()=>setMode('motion')); $('forcesMode').addEventListener('click',()=>setMode('forces')); draw();
+})();
+</script>
+</body>
+</html>
