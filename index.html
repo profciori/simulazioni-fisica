@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102643">
+<meta name="description" content="Laboratorio di Fisica: simulazioni interattive di dinamica per il liceo scientifico.">
+<title>Laboratorio di Fisica · Simulazioni interattive</title>
+<style>
+:root{color-scheme:light;--navy:#142944;--blue:#4589cc;--orange:#e4a45a;--paper:#f5f8fc;--ink:#20314a;--muted:#64758b;--stroke:#dee7f2;--shadow:0 16px 48px rgba(17,41,70,.075)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+button,a{-webkit-tap-highlight-color:transparent}
+a{color:inherit}
+.wrap{width:min(1170px,calc(100% - 40px));margin:auto}
+.hero{color:white;background:radial-gradient(circle at 89% 4%,rgba(105,170,237,.19),transparent 30%),radial-gradient(circle at 4% 90%,rgba(124,187,234,.13),transparent 30%),linear-gradient(135deg,#102641 0%,#1a3d64 100%);overflow:hidden;position:relative}
+.hero:after{content:"";position:absolute;right:-105px;top:-140px;width:410px;height:410px;border:1px solid rgba(255,255,255,.09);border-radius:50%;box-shadow:0 0 0 65px rgba(255,255,255,.025),0 0 0 130px rgba(255,255,255,.017);pointer-events:none}
+nav{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:22px 0;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:12px;font-weight:760;letter-spacing:.01em;font-size:17px}
+.mark{width:40px;height:40px;border:1px solid rgba(255,255,255,.32);border-radius:13px;background:rgba(255,255,255,.095);display:grid;place-items:center}
+.navnote{font-size:13px;color:#b7cbe1}
+.hero-inner{padding:56px 0 71px;position:relative;z-index:1;max-width:780px}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.17em;color:#a6cff8;font-weight:760;margin-bottom:17px}
+h1{font-size:clamp(39px,6vw,70px);font-weight:790;line-height:1.035;letter-spacing:-.045em;margin:0 0 20px}h1 em{font-style:normal;color:#90c3f4}
+.hero p{font-size:clamp(16px,2vw,19px);line-height:1.65;color:#d2e0f0;max-width:660px;margin:0}
+.hero-chip{display:inline-flex;margin-top:29px;padding:9px 13px;border:1px solid rgba(255,255,255,.2);border-radius:100px;background:rgba(255,255,255,.06);color:#e9f3ff;font-size:13px;gap:9px;align-items:center}
+.hero-chip .indicator{width:7px;height:7px;border-radius:50%;background:#87dfb6}
+main{padding:53px 0 62px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:24px}.section-head h2{font-size:27px;letter-spacing:-.03em;margin:0 0 5px}.section-head p{color:var(--muted);margin:0;font-size:15px}.count{font-size:13px;color:var(--muted);border:1px solid var(--stroke);background:white;border-radius:50px;padding:7px 12px;white-space:nowrap}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--stroke);border-radius:20px;background:white;text-decoration:none;box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s,border-color .18s;min-width:0}
+.card:hover{transform:translateY(-5px);box-shadow:0 19px 45px rgba(17,41,70,.12);border-color:#b9cce2}
+.card:focus-visible{outline:3px solid #438bdd;outline-offset:4px}
+.preview{height:218px;display:grid;place-items:center;overflow:hidden;position:relative;background:linear-gradient(160deg,#eff6fe,#f8fbff);border-bottom:1px solid #e9eff6}
+.preview.rose{background:linear-gradient(160deg,#eef6ff,#fff9f0)}.preview.gold{background:linear-gradient(160deg,#f5f8ff,#fff8e9)}.preview svg{width:100%;height:100%}
+.preview-label{position:absolute;top:14px;left:15px;background:#ffffffdc;padding:6px 9px;border:1px solid #e6eef7;border-radius:7px;font-size:11px;color:#54708e;font-weight:720;letter-spacing:.075em;text-transform:uppercase}
+.card-copy{padding:23px 22px 24px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card-kicker{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6084a7}
+.card h3{font-size:23px;line-height:1.22;letter-spacing:-.03em;margin:0}.card p{color:#64758b;font-size:14px;line-height:1.65;margin:0;flex:1}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px}.pill{font-size:11px;padding:5px 8px;background:#f2f6fb;border:1px solid #e4edf6;color:#657b92;border-radius:50px}
+.go{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e8eef5;margin-top:8px;padding-top:16px;color:#235d9b;font-size:14px;font-weight:750}.go .arr{width:31px;height:31px;border-radius:50%;background:#eaf3ff;display:grid;place-items:center;font-size:19px;transition:transform .18s}.card:hover .arr{transform:translateX(3px)}
+.tip{display:flex;align-items:flex-start;gap:13px;margin-top:35px;background:#eaf2fb;border:1px solid #dce9f7;border-radius:14px;padding:17px 19px;color:#47617e;font-size:14px;line-height:1.6}.tip svg{flex:none;margin-top:2px}.tip strong{color:#284c75}
+footer{border-top:1px solid var(--stroke);padding:25px 0 35px;color:#718299;font-size:13px}.footrow{display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap}
+@media(max-width:940px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.cards .card:last-child{grid-column:span 2;display:grid;grid-template-columns:minmax(260px,.9fr) 1.1fr}.cards .card:last-child .preview{height:100%;min-height:240px;border-bottom:0;border-right:1px solid #e9eff6}}
+@media(max-width:640px){.wrap{width:min(100% - 30px,470px)}.hero-inner{padding:40px 0 55px}nav{padding:18px 0}.navnote{display:none}.section-head{align-items:start}.cards{grid-template-columns:1fr}.cards .card:last-child{grid-column:auto;display:flex}.cards .card:last-child .preview{height:218px;min-height:0;border-right:0;border-bottom:1px solid #e9eff6}.preview{height:205px}.card-copy{padding:20px}.section-head h2{font-size:24px}main{padding-top:38px}.count{margin-top:3px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero">
+ <div class="wrap">
+  <nav><div class="brand"><span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" width="29" height="29" fill="none" stroke="white" stroke-linecap="round" stroke-width="1.65"><ellipse cx="16" cy="16" rx="6.5" ry="13" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="6.5" ry="13" transform="rotate(-60 16 16)"/><ellipse cx="16" cy="16" rx="6.5" ry="13"/><circle cx="16" cy="16" r="2.2" fill="#9dd2ff" stroke="none"/></svg></span>Laboratorio di Fisica</div><span class="navnote">Liceo scientifico · Classe 3A</span></nav>
+  <div class="hero-inner"><div class="eyebrow">Simulazioni interattive · Dinamica</div><h1>La fisica<br>si <em>mette in moto.</em></h1><p>Esplora le leggi di Newton attraverso modelli animati, diagrammi delle forze e sistemi di equazioni. Modifica i parametri, osserva il moto e verifica i risultati.</p><div class="hero-chip"><span class="indicator"></span>3 simulazioni disponibili · Funzionano anche su iPad</div></div>
+ </div>
+</header>
+<main class="wrap">
+ <div class="section-head"><div><h2>Le simulazioni</h2><p>Scegli un esperimento per iniziare.</p></div><div class="count">3 modelli</div></div>
+ <section class="cards" aria-label="Elenco simulazioni">
+  <!-- Se i file HTML sul repository hanno nomi diversi, modifica solo gli attributi href delle schede. -->
+  <a class="card" href="macchina_atwood_3A_v3.html" aria-label="Apri simulazione Macchina di Atwood">
+   <div class="preview"><span class="preview-label">01 / Funi e carrucole</span><svg viewBox="0 0 350 220" role="img" aria-label="Due masse sospese a una carrucola"><path d="M130 37H220" stroke="#a5b3c4" stroke-width="5" stroke-linecap="round"/><path d="M175 37v28" stroke="#899aad" stroke-width="5"/><circle cx="175" cy="83" r="31" fill="#dae7f5" stroke="#68809a" stroke-width="3"/><circle cx="175" cy="83" r="4" fill="#68809a"/><path d="M144 83V140M144 83A31 31 0 0 1 206 83V117" stroke="#7c8999" stroke-width="3" fill="none"/><rect x="113" y="140" width="62" height="48" rx="5" fill="#5b96d6" stroke="#2c5b96" stroke-width="2"/><rect x="173" y="117" width="66" height="62" rx="5" fill="#e5ab62" stroke="#b87a30" stroke-width="2"/><text x="144" y="170" font-size="19" text-anchor="middle" font-family="Georgia" font-style="italic" fill="white">m₁</text><text x="206" y="152" font-size="19" text-anchor="middle" font-family="Georgia" font-style="italic" fill="white">m₂</text><path d="M260 157v-35m-5 8 5-8 5 8" stroke="#91aac5" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M88 142v30m-5-8 5 8 5-8" stroke="#91aac5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg></div>
+   <div class="card-copy"><div class="card-kicker">Modello 01</div><h3>Macchina di Atwood</h3><p>Due masse collegate da una fune ideale. Esplora l'accelerazione comune e la tensione attraverso le leggi della dinamica.</p><div class="pills"><span class="pill">Seconda legge</span><span class="pill">Tensione</span><span class="pill">Carrucola</span></div><div class="go">Apri simulazione <span class="arr" aria-hidden="true">→</span></div></div>
+  </a>
+  <a class="card" href="casse_sovrapposte_attrito_3A_v6.html" aria-label="Apri simulazione Due casse sovrapposte">
+   <div class="preview rose"><span class="preview-label">02 / Attrito</span><svg viewBox="0 0 350 220" role="img" aria-label="Due casse sovrapposte su piano orizzontale"><path d="M27 183H324" stroke="#778aa0" stroke-width="3" stroke-linecap="round"/><path d="M35 192H316" stroke="#bfcbd8" stroke-width="2" stroke-dasharray="6 6"/><rect x="72" y="131" width="218" height="52" rx="5" fill="#5b96d6" stroke="#2c5b96" stroke-width="2"/><rect x="129" y="81" width="105" height="50" rx="5" fill="#e5ab62" stroke="#b87a30" stroke-width="2"/><text x="181" y="111" font-size="21" text-anchor="middle" font-family="Georgia" font-style="italic" fill="white">m₂</text><text x="181" y="163" font-size="21" text-anchor="middle" font-family="Georgia" font-style="italic" fill="white">m₁</text><path d="M295 156h39m-9-6 9 6-9 6" stroke="#b7791f" stroke-width="3" fill="none" stroke-linecap="round"/><text x="311" y="145" font-size="17" text-anchor="middle" font-family="Georgia" font-style="italic" fill="#b7791f">F</text><path d="M155 74h53m-8-5 8 5-8 5" stroke="#8054b0" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg></div>
+   <div class="card-copy"><div class="card-kicker">Modello 02</div><h3>Due casse sovrapposte</h3><p>Una forza trascina il blocco inferiore. Confronta aderenza e slittamento, attrito statico e dinamico.</p><div class="pills"><span class="pill">Attrito statico</span><span class="pill">Attrito dinamico</span><span class="pill">Slittamento</span></div><div class="go">Apri simulazione <span class="arr" aria-hidden="true">→</span></div></div>
+  </a>
+  <a class="card" href="blocchi_asta_piano_inclinato_3A_v2.html" aria-label="Apri simulazione Blocchi collegati su piano inclinato">
+   <div class="preview gold"><span class="preview-label">03 / Piano inclinato</span><svg viewBox="0 0 350 220" role="img" aria-label="Due blocchi uniti da un'asta rigida lungo un piano inclinato"><path d="M48 186L254 29V186Z" fill="#e3e7ee"/><path d="M48 186L254 29" fill="none" stroke="#79889b" stroke-width="3.5"/><g transform="rotate(-37.3 125 126)"><rect x="84" y="103" width="78" height="49" rx="4" fill="#f4d957" stroke="#ac941c" stroke-width="2"/><text x="123" y="134" text-anchor="middle" font-family="Georgia" font-style="italic" font-size="22" fill="#514218">A</text></g><g transform="rotate(-37.3 204 66)"><rect x="168" y="42" width="73" height="49" rx="4" fill="#7fbee8" stroke="#397ea7" stroke-width="2"/><text x="204" y="73" text-anchor="middle" font-family="Georgia" font-style="italic" font-size="22" fill="#194663">B</text></g><path d="M151 106L178 84" stroke="#49576a" stroke-width="5" stroke-linecap="round"/><path d="M48 186h70" stroke="#a7b8cc" stroke-width="2" stroke-dasharray="5 5"/><path d="M77 186a29 29 0 0 0-6-18" stroke="#cf6472" stroke-width="2" fill="none"/><text x="87" y="178" font-family="Georgia" font-style="italic" font-size="17" fill="#b44b63">α</text></svg></div>
+   <div class="card-copy"><div class="card-kicker">Modello 03</div><h3>Blocchi su piano inclinato</h3><p>Due blocchi collegati da un'asta rigida. Modifica gli attriti per osservare quando l'asta spinge oppure trascina.</p><div class="pills"><span class="pill">Piano inclinato</span><span class="pill">Attrito dinamico</span><span class="pill">Asta rigida</span></div><div class="go">Apri simulazione <span class="arr" aria-hidden="true">→</span></div></div>
+  </a>
+ </section>
+ <aside class="tip"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#3e72a7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M10 17h4M9 7h6"/></svg><div><strong>Su iPad:</strong> apri questa pagina in Safari, tocca <strong>Condividi → Aggiungi alla schermata Home</strong> e avrai un unico accesso a tutto il laboratorio. Le simulazioni si aprono con un tocco.</div></aside>
+</main>
+<footer><div class="wrap footrow"><span>Laboratorio di Fisica · Materiali per la didattica</span><span>Classe 3A · A.S. 2026/2027</span></div></footer>
+</body>
+</html>
