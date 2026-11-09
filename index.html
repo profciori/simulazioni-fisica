@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#102643">
-<meta name="description" content="Laboratorio di Fisica: simulazioni interattive di dinamica per il liceo scientifico.">
+<meta name="description" content="Laboratorio di Fisica: simulazioni interattive di dinamica e termodinamica per il liceo scientifico.">
 <title>Laboratorio di Fisica · Simulazioni interattive</title>
 <style>
 :root{color-scheme:light;--navy:#142944;--blue:#4589cc;--orange:#e4a45a;--paper:#f5f8fc;--ink:#20314a;--muted:#64758b;--stroke:#dee7f2;--shadow:0 16px 48px rgba(17,41,70,.075)}
@@ -28,12 +28,12 @@ h1{font-size:clamp(39px,6vw,70px);font-weight:790;line-height:1.035;letter-spaci
 .hero-chip .indicator{width:7px;height:7px;border-radius:50%;background:#87dfb6}
 main{padding:53px 0 62px}
 .section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:24px}.section-head h2{font-size:27px;letter-spacing:-.03em;margin:0 0 5px}.section-head p{color:var(--muted);margin:0;font-size:15px}.count{font-size:13px;color:var(--muted);border:1px solid var(--stroke);background:white;border-radius:50px;padding:7px 12px;white-space:nowrap}
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
 .card{display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--stroke);border-radius:20px;background:white;text-decoration:none;box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s,border-color .18s;min-width:0}
 .card:hover{transform:translateY(-5px);box-shadow:0 19px 45px rgba(17,41,70,.12);border-color:#b9cce2}
 .card:focus-visible{outline:3px solid #438bdd;outline-offset:4px}
 .preview{height:218px;display:grid;place-items:center;overflow:hidden;position:relative;background:linear-gradient(160deg,#eff6fe,#f8fbff);border-bottom:1px solid #e9eff6}
-.preview.rose{background:linear-gradient(160deg,#eef6ff,#fff9f0)}.preview.gold{background:linear-gradient(160deg,#f5f8ff,#fff8e9)}.preview svg{width:100%;height:100%}
+.preview.rose{background:linear-gradient(160deg,#eef6ff,#fff9f0)}.preview.gold{background:linear-gradient(160deg,#f5f8ff,#fff8e9)}.preview.thermo{background:linear-gradient(160deg,#eef7fb,#fff7ea)}.preview svg{width:100%;height:100%}
 .preview-label{position:absolute;top:14px;left:15px;background:#ffffffdc;padding:6px 9px;border:1px solid #e6eef7;border-radius:7px;font-size:11px;color:#54708e;font-weight:720;letter-spacing:.075em;text-transform:uppercase}
 .card-copy{padding:23px 22px 24px;display:flex;flex-direction:column;gap:10px;flex:1}
 .card-kicker{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6084a7}
@@ -42,20 +42,20 @@ main{padding:53px 0 62px}
 .go{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e8eef5;margin-top:8px;padding-top:16px;color:#235d9b;font-size:14px;font-weight:750}.go .arr{width:31px;height:31px;border-radius:50%;background:#eaf3ff;display:grid;place-items:center;font-size:19px;transition:transform .18s}.card:hover .arr{transform:translateX(3px)}
 .tip{display:flex;align-items:flex-start;gap:13px;margin-top:35px;background:#eaf2fb;border:1px solid #dce9f7;border-radius:14px;padding:17px 19px;color:#47617e;font-size:14px;line-height:1.6}.tip svg{flex:none;margin-top:2px}.tip strong{color:#284c75}
 footer{border-top:1px solid var(--stroke);padding:25px 0 35px;color:#718299;font-size:13px}.footrow{display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap}
-@media(max-width:940px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.cards .card:last-child{grid-column:span 2;display:grid;grid-template-columns:minmax(260px,.9fr) 1.1fr}.cards .card:last-child .preview{height:100%;min-height:240px;border-bottom:0;border-right:1px solid #e9eff6}}
-@media(max-width:640px){.wrap{width:min(100% - 30px,470px)}.hero-inner{padding:40px 0 55px}nav{padding:18px 0}.navnote{display:none}.section-head{align-items:start}.cards{grid-template-columns:1fr}.cards .card:last-child{grid-column:auto;display:flex}.cards .card:last-child .preview{height:218px;min-height:0;border-right:0;border-bottom:1px solid #e9eff6}.preview{height:205px}.card-copy{padding:20px}.section-head h2{font-size:24px}main{padding-top:38px}.count{margin-top:3px}}
+@media(max-width:940px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.wrap{width:min(100% - 30px,470px)}.hero-inner{padding:40px 0 55px}nav{padding:18px 0}.navnote{display:none}.section-head{align-items:start}.cards{grid-template-columns:1fr}.preview{height:205px}.card-copy{padding:20px}.section-head h2{font-size:24px}main{padding-top:38px}.count{margin-top:3px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
 <header class="hero">
  <div class="wrap">
-  <nav><div class="brand"><span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" width="29" height="29" fill="none" stroke="white" stroke-linecap="round" stroke-width="1.65"><ellipse cx="16" cy="16" rx="6.5" ry="13" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="6.5" ry="13" transform="rotate(-60 16 16)"/><ellipse cx="16" cy="16" rx="6.5" ry="13"/><circle cx="16" cy="16" r="2.2" fill="#9dd2ff" stroke="none"/></svg></span>Laboratorio di Fisica</div><span class="navnote">Liceo scientifico · Classe 3A</span></nav>
-  <div class="hero-inner"><div class="eyebrow">Simulazioni interattive · Dinamica</div><h1>La fisica<br>si <em>mette in moto.</em></h1><p>Esplora le leggi di Newton attraverso modelli animati, diagrammi delle forze e sistemi di equazioni. Modifica i parametri, osserva il moto e verifica i risultati.</p><div class="hero-chip"><span class="indicator"></span>3 simulazioni disponibili · Funzionano anche su iPad</div></div>
+  <nav><div class="brand"><span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" width="29" height="29" fill="none" stroke="white" stroke-linecap="round" stroke-width="1.65"><ellipse cx="16" cy="16" rx="6.5" ry="13" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="6.5" ry="13" transform="rotate(-60 16 16)"/><ellipse cx="16" cy="16" rx="6.5" ry="13"/><circle cx="16" cy="16" r="2.2" fill="#9dd2ff" stroke="none"/></svg></span>Laboratorio di Fisica</div><span class="navnote">Liceo scientifico · A.S. 2026/2027</span></nav>
+  <div class="hero-inner"><div class="eyebrow">Simulazioni interattive · Dinamica e termodinamica</div><h1>La fisica<br>si <em>mette in moto.</em></h1><p>Esplora fenomeni fisici attraverso modelli animati, grafici e grandezze aggiornate in tempo reale. Modifica i parametri, osserva l’evoluzione del sistema e collega il modello alle leggi fisiche.</p><div class="hero-chip"><span class="indicator"></span>4 simulazioni disponibili · Funzionano anche su iPad</div></div>
  </div>
 </header>
 <main class="wrap">
- <div class="section-head"><div><h2>Le simulazioni</h2><p>Scegli un esperimento per iniziare.</p></div><div class="count">3 modelli</div></div>
+ <div class="section-head"><div><h2>Le simulazioni</h2><p>Scegli un esperimento per iniziare.</p></div><div class="count">4 modelli</div></div>
  <section class="cards" aria-label="Elenco simulazioni">
   <!-- Se i file HTML sul repository hanno nomi diversi, modifica solo gli attributi href delle schede. -->
   <a class="card" href="macchina_atwood_3A_v3.html" aria-label="Apri simulazione Macchina di Atwood">
@@ -70,9 +70,29 @@ footer{border-top:1px solid var(--stroke);padding:25px 0 35px;color:#718299;font
    <div class="preview gold"><span class="preview-label">03 / Piano inclinato</span><svg viewBox="0 0 350 220" role="img" aria-label="Due blocchi uniti da un'asta rigida lungo un piano inclinato"><path d="M48 186L254 29V186Z" fill="#e3e7ee"/><path d="M48 186L254 29" fill="none" stroke="#79889b" stroke-width="3.5"/><g transform="rotate(-37.3 125 126)"><rect x="84" y="103" width="78" height="49" rx="4" fill="#f4d957" stroke="#ac941c" stroke-width="2"/><text x="123" y="134" text-anchor="middle" font-family="Georgia" font-style="italic" font-size="22" fill="#514218">A</text></g><g transform="rotate(-37.3 204 66)"><rect x="168" y="42" width="73" height="49" rx="4" fill="#7fbee8" stroke="#397ea7" stroke-width="2"/><text x="204" y="73" text-anchor="middle" font-family="Georgia" font-style="italic" font-size="22" fill="#194663">B</text></g><path d="M151 106L178 84" stroke="#49576a" stroke-width="5" stroke-linecap="round"/><path d="M48 186h70" stroke="#a7b8cc" stroke-width="2" stroke-dasharray="5 5"/><path d="M77 186a29 29 0 0 0-6-18" stroke="#cf6472" stroke-width="2" fill="none"/><text x="87" y="178" font-family="Georgia" font-style="italic" font-size="17" fill="#b44b63">α</text></svg></div>
    <div class="card-copy"><div class="card-kicker">Modello 03</div><h3>Blocchi su piano inclinato</h3><p>Due blocchi collegati da un'asta rigida. Modifica gli attriti per osservare quando l'asta spinge oppure trascina.</p><div class="pills"><span class="pill">Piano inclinato</span><span class="pill">Attrito dinamico</span><span class="pill">Asta rigida</span></div><div class="go">Apri simulazione <span class="arr" aria-hidden="true">→</span></div></div>
   </a>
+
+  <a class="card" href="trasformazione_adiabatica.html" aria-label="Apri simulazione Trasformazione adiabatica reversibile">
+   <div class="preview thermo"><span class="preview-label">04 / Termodinamica</span><svg viewBox="0 0 350 220" role="img" aria-label="Gas in un cilindro e curva adiabatica nel piano pressione-volume">
+    <rect x="35" y="70" width="112" height="118" rx="4" fill="#f8fbff" stroke="#70869e" stroke-width="3"/>
+    <path d="M35 70h112" stroke="#253c55" stroke-width="9"/>
+    <path d="M91 70V43" stroke="#253c55" stroke-width="5"/>
+    <rect x="61" y="22" width="60" height="27" rx="4" fill="#7f8995"/>
+    <g fill="#4e93d2"><circle cx="56" cy="99" r="5"/><circle cx="90" cy="115" r="5"/><circle cx="122" cy="94" r="5"/><circle cx="67" cy="145" r="5"/><circle cx="108" cy="158" r="5"/><circle cx="132" cy="137" r="5"/><circle cx="48" cy="171" r="5"/></g>
+    <path d="M29 76v108M153 76v108M35 194h112" stroke="#e5a14a" stroke-width="6" opacity=".55"/>
+    <text x="91" y="210" text-anchor="middle" font-size="13" fill="#a76617" font-weight="700">Q = 0</text>
+    <path d="M191 183V47M191 183H326" stroke="#6d7f92" stroke-width="2.5"/>
+    <path d="M203 61 C219 76,229 101,245 126 C263 153,288 168,318 176" fill="none" stroke="#4b8bc8" stroke-width="4"/>
+    <circle cx="255" cy="142" r="6" fill="#d94a45"/>
+    <path d="M255 142V183M191 142H255" stroke="#a2afbc" stroke-width="1.6" stroke-dasharray="5 5"/>
+    <text x="325" y="199" text-anchor="end" font-family="Georgia" font-style="italic" font-size="16" fill="#536a82">V</text>
+    <text x="178" y="52" text-anchor="middle" font-family="Georgia" font-style="italic" font-size="16" fill="#536a82">P</text>
+    <text x="257" y="82" text-anchor="middle" font-family="Georgia" font-style="italic" font-size="15" fill="#356fa7">PV<tspan dy="-5" font-size="11">γ</tspan><tspan dy="5"> = cost.</tspan></text>
+   </svg></div>
+   <div class="card-copy"><div class="card-kicker">Modello 04</div><h3>Trasformazione adiabatica</h3><p>Comprimi o espandi un gas perfetto in condizioni adiabatiche reversibili. Osserva insieme pistone, temperatura, pressione e curve nei diagrammi P-V, T-V e P-T.</p><div class="pills"><span class="pill">Q = 0</span><span class="pill">PVᵞ = costante</span><span class="pill">Gas perfetto</span></div><div class="go">Apri simulazione <span class="arr" aria-hidden="true">→</span></div></div>
+  </a>
  </section>
  <aside class="tip"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#3e72a7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M10 17h4M9 7h6"/></svg><div><strong>Su iPad:</strong> apri questa pagina in Safari, tocca <strong>Condividi → Aggiungi alla schermata Home</strong> e avrai un unico accesso a tutto il laboratorio. Le simulazioni si aprono con un tocco.</div></aside>
 </main>
-<footer><div class="wrap footrow"><span>Laboratorio di Fisica · Materiali per la didattica</span><span>Classe 3A · A.S. 2026/2027</span></div></footer>
+<footer><div class="wrap footrow"><span>Laboratorio di Fisica · Materiali per la didattica</span><span>Liceo scientifico · A.S. 2026/2027</span></div></footer>
 </body>
 </html>
