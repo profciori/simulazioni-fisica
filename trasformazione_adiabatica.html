@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trasformazione adiabatica reversibile</title>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+body{font-family:Arial,sans-serif;margin:0;padding:24px;color:#000;background:#fff}.page{max-width:1500px;margin:auto}h1{text-align:center;font-size:28px;margin:0 0 24px}h3{text-align:center;margin:0 0 8px}.row{display:flex;gap:25px;justify-content:center;align-items:flex-start;flex-wrap:wrap}.panel{min-width:0}canvas{border:1px solid #aaa;background:#fff;max-width:100%;height:auto}.formula-box{margin-top:34px;width:300px;padding:20px 18px;background:#eef4fa;border:1px solid #b8c9d9;border-radius:10px;text-align:center}.formula-title{font-size:22px;font-weight:bold;margin-bottom:12px}.formula-main{font-size:20px;line-height:1.8}.graph-formula{text-align:center;font-size:18px;margin:0 0 7px}.controls{margin-top:25px;padding:20px;background:#f4f4f4;border-radius:10px}.controls-top{display:flex;gap:60px;justify-content:center;align-items:center;flex-wrap:wrap}.slider-box{min-width:340px}.slider-box label{font-size:18px}input[type=range]{width:340px;max-width:100%}.process-box{min-width:340px;text-align:center;font-size:18px}.values{margin-top:25px;font-size:20px;text-align:center;font-weight:500;line-height:1.8}.second-row{margin-top:22px}@media(max-width:700px){body{padding:12px}h1{font-size:23px}.formula-box{width:auto}.slider-box,.process-box{min-width:0;width:100%}}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Trasformazione adiabatica reversibile di un gas perfetto</h1>
+<div class="row">
+  <div class="panel"><h3>Modello microscopico</h3><canvas id="gasCanvas" width="430" height="520"></canvas></div>
+  <div class="panel"><h3>Diagramma P-V — Piano di Clapeyron</h3><div class="graph-formula">\(PV^\gamma=\mathrm{costante}\)</div><canvas id="pvCanvas" width="460" height="320"></canvas></div>
+  <div class="formula-box">
+    <div class="formula-title">Adiabatica reversibile</div>
+    <div class="formula-main">
+      \(Q=0\)<br>\(\gamma=1.40\)<br><br>
+      \(PV^\gamma=\mathrm{costante}\)<br>
+      \(TV^{\gamma-1}=\mathrm{costante}\)<br><br>
+      \(\displaystyle P=P_0\left(\frac{V_0}{V}\right)^\gamma\)<br><br>
+      \(\displaystyle T=T_0\left(\frac{V_0}{V}\right)^{\gamma-1}\)
+    </div>
+  </div>
+</div>
+<div class="row second-row">
+  <div class="panel"><h3>Diagramma T-V</h3><div class="graph-formula">\(TV^{\gamma-1}=\mathrm{costante}\)</div><canvas id="tvCanvas" width="460" height="320"></canvas></div>
+  <div class="panel"><h3>Diagramma P-T</h3><div class="graph-formula">\(\displaystyle P=P_0\left(\frac{T}{T_0}\right)^{\frac{\gamma}{\gamma-1}}\)</div><canvas id="ptCanvas" width="460" height="320"></canvas></div>
+</div>
+<div class="controls">
+  <div class="controls-top">
+    <div class="slider-box"><label>Volume: <b><span id="volumeValue">25.0</span> dm³</b></label><br><br><input id="volumeSlider" type="range" min="12" max="40" step="0.2" value="25"></div>
+    <div class="process-box"><b id="processLabel">Stato iniziale A</b><div style="margin-top:8px;color:#444">Compressione se V diminuisce &nbsp; • &nbsp; Espansione se V aumenta</div></div>
+  </div>
+  <div class="values">
+    n = 1.00 mol &nbsp;&nbsp;&nbsp;&nbsp; γ = 1.40 &nbsp;&nbsp;&nbsp;&nbsp;
+    P = <span id="Pdisplay">1.000</span> bar &nbsp;&nbsp;&nbsp;&nbsp;
+    V = <span id="Vdisplay">25.0</span> dm³ &nbsp;&nbsp;&nbsp;&nbsp;
+    T = <span id="Tdisplay">300.7</span> K<br>
+    Urti sul pistone negli ultimi 3 s: <span id="collisionDisplay">0</span>
+    &nbsp;&nbsp;&nbsp;&nbsp; Massa equivalente sul pistone: <span id="massDisplay">20.4</span> kg
+  </div>
+</div>
+</div>
+<script>
+const n=1.00,gamma=1.40,R=0.08314,g=9.81,pistonArea=0.002;
+const P0=1.00,V0=25.0,T0=P0*V0/(n*R),Vmin=12.0,Vmax=40.0; let volume=V0;
+const volumeSlider=document.getElementById('volumeSlider'),volumeValue=document.getElementById('volumeValue');
+const Pdisplay=document.getElementById('Pdisplay'),Vdisplay=document.getElementById('Vdisplay'),Tdisplay=document.getElementById('Tdisplay'),massDisplay=document.getElementById('massDisplay'),collisionDisplay=document.getElementById('collisionDisplay'),processLabel=document.getElementById('processLabel');
+const gasCanvas=document.getElementById('gasCanvas'),ctx=gasCanvas.getContext('2d');
+const pvCanvas=document.getElementById('pvCanvas'),pv=pvCanvas.getContext('2d');
+const tvCanvas=document.getElementById('tvCanvas'),tv=tvCanvas.getContext('2d');
+const ptCanvas=document.getElementById('ptCanvas'),pt=ptCanvas.getContext('2d');
+function stateFromV(V){return{P:P0*Math.pow(V0/V,gamma),V,T:T0*Math.pow(V0/V,gamma-1)}}
+function pistonMass(Pbar){return Pbar*100000*pistonArea/g} function temperatureFactor(T){return Math.pow(T/300,0.8)}
+const N=35,cylinderLeft=70,cylinderRight=360,cylinderBottom=460,minPistonY=70,maxPistonY=350;
+function pistonPosition(V){let f=(V-Vmin)/(Vmax-Vmin);f=Math.max(0,Math.min(1,f));return maxPistonY-f*(maxPistonY-minPistonY)}
+let pistonCollisions=[];const collisionWindow=3000,flashDuration=140;let particles=[];const initialPistonY=pistonPosition(V0);
+for(let i=0;i<N;i++){const a=Math.random()*2*Math.PI,s=2.3;particles.push({x:cylinderLeft+20+Math.random()*(cylinderRight-cylinderLeft-40),y:initialPistonY+20+Math.random()*(cylinderBottom-initialPistonY-40),vx:s*Math.cos(a),vy:s*Math.sin(a),r:5,lastPistonCollision:-Infinity})}
+volumeSlider.addEventListener('input',function(){volume=parseFloat(this.value);volumeValue.textContent=volume.toFixed(1)});
+function drawGas(t){const s=stateFromV(volume),py=pistonPosition(s.V),pc=(cylinderLeft+cylinderRight)/2,m=pistonMass(s.P);ctx.clearRect(0,0,gasCanvas.width,gasCanvas.height);
+ctx.fillStyle='rgba(255,165,0,0.16)';ctx.fillRect(cylinderLeft-14,py-2,10,cylinderBottom-py+6);ctx.fillRect(cylinderRight+4,py-2,10,cylinderBottom-py+6);ctx.fillRect(cylinderLeft-4,cylinderBottom+4,cylinderRight-cylinderLeft+8,10);
+ctx.lineWidth=5;ctx.strokeStyle='black';ctx.beginPath();ctx.moveTo(cylinderLeft,py);ctx.lineTo(cylinderLeft,cylinderBottom);ctx.lineTo(cylinderRight,cylinderBottom);ctx.lineTo(cylinderRight,py);ctx.stroke();
+ctx.lineWidth=14;ctx.beginPath();ctx.moveTo(cylinderLeft,py);ctx.lineTo(cylinderRight,py);ctx.stroke();ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(pc,py);ctx.lineTo(pc,py-35);ctx.stroke();
+const bw=110,bh=Math.max(28,Math.min(20+m*0.9,95)),bx=pc-bw/2,by=py-35-bh;ctx.fillStyle='#777';ctx.fillRect(bx,by,bw,bh);ctx.strokeStyle='black';ctx.lineWidth=2;ctx.strokeRect(bx,by,bw,bh);ctx.fillStyle='white';ctx.font='bold 16px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(m.toFixed(1)+' kg',pc,by+bh/2);
+ctx.fillStyle='#d17c00';ctx.font='bold 16px Arial';ctx.textBaseline='alphabetic';ctx.fillText('PARETI ISOLATE — Q = 0',pc,cylinderBottom+32);
+for(const p of particles){ctx.fillStyle=t-p.lastPistonCollision<flashDuration?'#ff7f0e':'#2277cc';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,2*Math.PI);ctx.fill()}}
+function updateParticles(t){const s=stateFromV(volume),py=pistonPosition(s.V),desired=2.3*temperatureFactor(s.T);for(const p of particles){const sp=Math.sqrt(p.vx*p.vx+p.vy*p.vy);if(sp>0){p.vx=p.vx/sp*desired;p.vy=p.vy/sp*desired}p.x+=p.vx;p.y+=p.vy;if(p.x-p.r<cylinderLeft){p.x=cylinderLeft+p.r;p.vx*=-1}if(p.x+p.r>cylinderRight){p.x=cylinderRight-p.r;p.vx*=-1}if(p.y+p.r>cylinderBottom){p.y=cylinderBottom-p.r;p.vy*=-1}if(p.y-p.r<py){if(p.vy<0){pistonCollisions.push(t);p.lastPistonCollision=t}p.y=py+p.r;p.vy=Math.abs(p.vy)}}}
+function updateCollisionCounter(t){pistonCollisions=pistonCollisions.filter(x=>t-x<=collisionWindow);collisionDisplay.textContent=pistonCollisions.length}
+function drawAxes(g,canvas,xMin,xMax,yMin,yMax,xLabel,yLabel,xFmt,yFmt){g.clearRect(0,0,canvas.width,canvas.height);const m={l:60,r:20,t:25,b:55},W=canvas.width-m.l-m.r,H=canvas.height-m.t-m.b,xCoord=x=>m.l+(x-xMin)/(xMax-xMin)*W,yCoord=y=>m.t+H-(y-yMin)/(yMax-yMin)*H;g.strokeStyle='#ddd';g.lineWidth=1;for(let i=0;i<=5;i++){const x=m.l+i*W/5,val=xMin+i*(xMax-xMin)/5;g.beginPath();g.moveTo(x,m.t);g.lineTo(x,m.t+H);g.stroke();g.fillStyle='black';g.font='13px Arial';g.textAlign='center';g.fillText(xFmt(val),x,m.t+H+22)}for(let i=0;i<=5;i++){const y=m.t+H-i*H/5,val=yMin+i*(yMax-yMin)/5;g.beginPath();g.moveTo(m.l,y);g.lineTo(m.l+W,y);g.stroke();g.fillStyle='black';g.font='13px Arial';g.textAlign='right';g.fillText(yFmt(val),m.l-8,y+4)}g.strokeStyle='black';g.lineWidth=2;g.beginPath();g.moveTo(m.l,m.t);g.lineTo(m.l,m.t+H);g.lineTo(m.l+W,m.t+H);g.stroke();g.fillStyle='black';g.font='16px Arial';g.textAlign='center';g.fillText(xLabel,m.l+W/2,canvas.height-15);g.save();g.translate(20,m.t+H/2);g.rotate(-Math.PI/2);g.fillText(yLabel,0,0);g.restore();return{xCoord,yCoord,m}}
+function drawStatePoint(g,x,y,label){g.fillStyle='black';g.beginPath();g.arc(x,y,5,0,2*Math.PI);g.fill();g.font='bold 16px Arial';g.textAlign='center';g.fillText(label,x,y-12)}
+function drawCurrentPoint(g,x,y,xBase,yBase){g.save();g.setLineDash([6,6]);g.strokeStyle='#888';g.lineWidth=1.5;g.beginPath();g.moveTo(x,y);g.lineTo(x,yBase);g.stroke();g.beginPath();g.moveTo(xBase,y);g.lineTo(x,y);g.stroke();g.restore();g.fillStyle='#d62728';g.beginPath();g.arc(x,y,8,0,2*Math.PI);g.fill()}
+function drawPV(){const s=stateFromV(volume),Pmin=stateFromV(Vmax).P*0.85,Pmax=stateFromV(Vmin).P*1.10,ax=drawAxes(pv,pvCanvas,Vmin,Vmax,Pmin,Pmax,'Volume V (dm³)','Pressione P (bar)',x=>x.toFixed(1),y=>y.toFixed(2));pv.strokeStyle='#2277cc';pv.lineWidth=3;pv.beginPath();let first=true;for(let V=Vmin;V<=Vmax;V+=0.1){const st=stateFromV(V),x=ax.xCoord(V),y=ax.yCoord(st.P);if(first){pv.moveTo(x,y);first=false}else pv.lineTo(x,y)}pv.stroke();drawStatePoint(pv,ax.xCoord(V0),ax.yCoord(P0),'A');drawCurrentPoint(pv,ax.xCoord(s.V),ax.yCoord(s.P),ax.m.l,ax.yCoord(Pmin))}
+function drawTV(){const s=stateFromV(volume),Tmin=stateFromV(Vmax).T*0.93,Tmax=stateFromV(Vmin).T*1.07,ax=drawAxes(tv,tvCanvas,Vmin,Vmax,Tmin,Tmax,'Volume V (dm³)','Temperatura T (K)',x=>x.toFixed(1),y=>y.toFixed(0));tv.strokeStyle='#2277cc';tv.lineWidth=3;tv.beginPath();let first=true;for(let V=Vmin;V<=Vmax;V+=0.1){const st=stateFromV(V),x=ax.xCoord(V),y=ax.yCoord(st.T);if(first){tv.moveTo(x,y);first=false}else tv.lineTo(x,y)}tv.stroke();drawStatePoint(tv,ax.xCoord(V0),ax.yCoord(T0),'A');drawCurrentPoint(tv,ax.xCoord(s.V),ax.yCoord(s.T),ax.m.l,ax.yCoord(Tmin))}
+function drawPT(){const s=stateFromV(volume),Tmin=stateFromV(Vmax).T*0.93,Tmax=stateFromV(Vmin).T*1.07,Pmin=stateFromV(Vmax).P*0.85,Pmax=stateFromV(Vmin).P*1.10,ax=drawAxes(pt,ptCanvas,Tmin,Tmax,Pmin,Pmax,'Temperatura T (K)','Pressione P (bar)',x=>x.toFixed(0),y=>y.toFixed(2));pt.strokeStyle='#2277cc';pt.lineWidth=3;pt.beginPath();let first=true;for(let V=Vmax;V>=Vmin;V-=0.1){const st=stateFromV(V),x=ax.xCoord(st.T),y=ax.yCoord(st.P);if(first){pt.moveTo(x,y);first=false}else pt.lineTo(x,y)}pt.stroke();drawStatePoint(pt,ax.xCoord(T0),ax.yCoord(P0),'A');drawCurrentPoint(pt,ax.xCoord(s.T),ax.yCoord(s.P),ax.m.l,ax.yCoord(Pmin))}
+function updateValues(){const s=stateFromV(volume),m=pistonMass(s.P);Vdisplay.textContent=s.V.toFixed(1);Pdisplay.textContent=s.P.toFixed(3);Tdisplay.textContent=s.T.toFixed(1);massDisplay.textContent=m.toFixed(1);if(Math.abs(s.V-V0)<0.05)processLabel.textContent='Stato iniziale A';else if(s.V<V0)processLabel.textContent='Compressione adiabatica';else processLabel.textContent='Espansione adiabatica'}
+function animate(t){updateParticles(t);updateCollisionCounter(t);drawGas(t);drawPV();drawTV();drawPT();updateValues();requestAnimationFrame(animate)}requestAnimationFrame(animate);
+</script>
+</body>
+</html>
