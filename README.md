@@ -12,7 +12,6 @@ Le simulazioni sono realizzate in **HTML, CSS e JavaScript** e funzionano dirett
 | Dinamica | [Due casse sovrapposte](casse_sovrapposte_attrito_3A_v6.html) | Attrito statico e dinamico, aderenza e slittamento |
 | Dinamica | [Blocchi su piano inclinato](blocchi_asta_piano_inclinato_3A_v2.html) | Piano inclinato, attrito, asta rigida |
 | Termodinamica | [Trasformazione adiabatica reversibile](trasformazione_adiabatica.html) | Gas perfetto, \(Q=0\), legge di Poisson, diagrammi P-V, T-V e P-T |
-
 | Termodinamica | [Espansione libera di Joule](simulazione_joule_4B.html) | Gas perfetto nel vuoto, distribuzione delle particelle, stati di equilibrio, \(Q=0\), \(L=0\), \(\Delta U=0\) |
 
 ## Pagina principale
