@@ -13,8 +13,9 @@ Le simulazioni sono realizzate in **HTML, CSS e JavaScript** e funzionano dirett
 | Dinamica | [Blocchi su piano inclinato](blocchi_asta_piano_inclinato_3A_v2.html) | Piano inclinato, attrito, asta rigida |
 | Termodinamica | [Trasformazione adiabatica reversibile](trasformazione_adiabatica.html) | Gas perfetto, \(Q=0\), legge di Poisson, diagrammi P-V, T-V e P-T |
 | Termodinamica | [Espansione libera di Joule](simulazione_joule_4B.html) | Gas perfetto nel vuoto, distribuzione delle particelle, stati di equilibrio, \(Q=0\), \(L=0\), \(\Delta U=0\) |
-
 | Termodinamica | [Riscaldamento isocoro](riscaldamento_isocoro_4B.html) | Recipiente rigido, riscaldamento, diagramma P–V, aumento di temperatura e pressione, Q = ΔU |
+
+| Termodinamica | [Espansione adiabatica con pistone](espansione_adiabatica_4B.html) | Espansione adiabatica reversibile, particelle, pistone mobile, diagramma P–V, lavoro del gas e ΔU = −L |
 
 ## Pagina principale
 
