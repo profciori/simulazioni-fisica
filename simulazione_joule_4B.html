@@ -1,0 +1,54 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Espansione libera di Joule — 4B</title><style>:root{font-family:system-ui,-apple-system,sans-serif;color:#173042;background:#f5f8fb}*{box-sizing:border-box}body{margin:0;padding:18px}.wrap{max-width:950px;margin:auto}h1{font-size:clamp(22px,4vw,32px);margin:0 0 6px}.sub{color:#52687a;margin:0 0 16px}.panel{background:white;border:1px solid #d7e1e8;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #15304409}canvas{width:100%;display:block;border-radius:10px;background:#e7f2f7;touch-action:manipulation}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}button{font:inherit;border:0;border-radius:10px;padding:11px 16px;cursor:pointer;background:#1366a3;color:white;font-weight:650}button.secondary{background:#e6edf2;color:#19374c}button:disabled{opacity:.5;cursor:default}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#f0f5f9;border-radius:12px;padding:12px}.stat small{display:block;color:#597084}.stat strong{font-size:23px}.note{font-size:14px;line-height:1.5;color:#425a6c}.equations{display:flex;gap:10px;flex-wrap:wrap}.eq{background:#eaf6ee;color:#17613b;border-radius:9px;padding:10px 18px;font-size:19px;font-weight:700}#status{font-weight:650;color:#235878}.bar{height:9px;background:#e4edf4;border-radius:8px;overflow:hidden;margin-top:10px}.bar>div{height:100%;background:#1687bc;width:0%;transition:width .15s} @media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:19px}}</style></head><body><main class="wrap"><h1>L’esperimento di Joule</h1><p class="sub">Classe 4B · Espansione libera di un gas perfetto nel vuoto · Modello microscopico illustrativo</p><section class="panel"><canvas id="scene" width="900" height="380" aria-label="Due serbatoi con particelle di gas e valvola"></canvas><div class="actions"><button id="open">Apri la valvola</button><button id="reset" class="secondary">Ripristina</button><button id="pause" class="secondary">Pausa</button></div><p id="status" aria-live="polite">Stato iniziale: gas in A, vuoto in B. Valvola chiusa.</p><div class="bar"><div id="progress"></div></div></section><section class="panel"><div class="stats"><div class="stat"><small>Volume accessibile</small><strong id="volume">V₀</strong></div><div class="stat"><small>Pressione di equilibrio</small><strong id="pressure">P₀</strong></div><div class="stat"><small>Temperatura di equilibrio</small><strong id="temperature">T₀</strong></div><div class="stat"><small>Particelle in B</small><strong id="fraction">0%</strong></div><div class="stat"><small>Energia interna</small><strong id="energy">U₀</strong></div><div class="stat"><small>Stato</small><strong id="phase">Iniziale</strong></div></div><p class="note">La pressione e la temperatura indicate sono valori di <b>equilibrio</b>. La barra indica l’avvicinamento alla distribuzione finale, non un tempo prestabilito. Durante l’espansione il gas non è in equilibrio e non è corretto attribuirgli un’unica pressione uniforme P(t). Il volume accessibile passa da V₀ a 2V₀ all’apertura della valvola: non cresce gradualmente.</p></section><section class="panel"><h2>Bilancio energetico</h2><div class="equations"><span class="eq">Q = 0</span><span class="eq">L = 0</span><span class="eq">ΔU = 0</span></div><p class="note">I recipienti sono rigidi e isolati. L’espansione avviene contro il vuoto, senza lavoro esterno. Per il gas perfetto la temperatura iniziale e quella finale coincidono. In questo modello semplificato le particelle non interagiscono tra loro e cambiano direzione soltanto urtando elasticamente le pareti; il modulo della velocità di ciascuna resta costante.</p></section></main><script>
+const c=document.getElementById('scene'),ctx=c.getContext('2d');const N=100;let particles=[],open=false,paused=false,elapsed=0,last=0,stableFor=0,finished=false;const bounds={x:64,y:76,w:772,h:246},mid=450,openingTop=167,openingBottom=229;const rnd=(a,b)=>a+Math.random()*(b-a);function init(){particles=Array.from({length:N},()=>{let a=rnd(0,Math.PI*2),s=rnd(340,490);return{x:rnd(83,mid-16),y:rnd(bounds.y+12,bounds.y+bounds.h-12),vx:Math.cos(a)*s,vy:Math.sin(a)*s}});open=false;elapsed=0;stableFor=0;finished=false;paused=false;last=0;document.getElementById('open').disabled=false;document.getElementById('pause').textContent='Pausa';update();draw()}
+function update(){
+ const n=particles.filter(p=>p.x>mid).length, frac=n/N;
+ document.getElementById('fraction').textContent=Math.round(frac*100)+'%';
+ document.getElementById('volume').textContent=open?'2V₀':'V₀';
+ document.getElementById('pressure').textContent=finished?'P₀ / 2':open?'—':'P₀';
+ document.getElementById('temperature').textContent=finished?'T₀':open?'—':'T₀';
+ document.getElementById('energy').textContent='U₀';
+ document.getElementById('phase').textContent=!open?'Iniziale':finished?'Finale ≈':'Transitorio';
+ document.getElementById('status').textContent=!open?'Stato iniziale: gas in A, vuoto in B. Valvola chiusa.':finished?'Distribuzione prossima all’equilibrio: le particelle continuano a muoversi.':'Valvola aperta: espansione libera, distribuzione non ancora uniforme.';
+ // Avanzamento indicativo, non un cronometro che forza artificialmente l’equilibrio.
+ const progress=!open?0:finished?100:Math.min(95,100*frac/.5*.8);
+ document.getElementById('progress').style.width=progress+'%';
+}
+function advance(dt){
+ if(paused)return;
+ if(open)elapsed+=dt;
+ const radius=5, left=bounds.x+9,right=bounds.x+bounds.w-9,top=bounds.y+9,bottom=bounds.y+bounds.h-9;
+ // Collisioni esclusivamente con le pareti: nessun cambio casuale di direzione.
+ // Le particelle sono puntiformi non interagenti (gas ideale semplificato).
+ for(const p of particles){
+  let remaining=dt;
+  // Sottopassi limitano attraversamenti artificiali delle pareti ad alta velocità.
+  while(remaining>0){
+   const h=Math.min(remaining,.008);remaining-=h;
+   const oldX=p.x,oldY=p.y;
+   p.x+=p.vx*h;p.y+=p.vy*h;
+   if(p.x<left){p.x=2*left-p.x;p.vx=Math.abs(p.vx)}
+   if(p.x>right){p.x=2*right-p.x;p.vx=-Math.abs(p.vx)}
+   if(p.y<top){p.y=2*top-p.y;p.vy=Math.abs(p.vy)}
+   if(p.y>bottom){p.y=2*bottom-p.y;p.vy=-Math.abs(p.vy)}
+   // Urto con il divisorio, salvo attraversamento della vera apertura.
+   const crosses=(oldX<mid-radius&&p.x>=mid-radius&&p.vx>0)||(oldX>mid+radius&&p.x<=mid+radius&&p.vx<0);
+   if(crosses){
+    const boundary=p.vx>0?mid-radius:mid+radius;
+    const ratio=(boundary-oldX)/(p.x-oldX);
+    const yAt=oldY+(p.y-oldY)*Math.max(0,Math.min(1,ratio));
+    const through=open&&yAt>openingTop+radius&&yAt<openingBottom-radius;
+    if(!through){p.x=2*boundary-p.x;p.vx=-p.vx}
+   }
+  }
+ }
+ if(open&&!finished){
+  const frac=particles.filter(p=>p.x>mid).length/N;
+  if(frac>=.40&&frac<=.60)stableFor+=dt;else stableFor=0;
+  // Aspetta che il gas abbia effettivamente raggiunto entrambi i serbatoi.
+  if(elapsed>=12&&stableFor>=2.5)finished=true;
+ }
+ update();
+}
+function draw(){ctx.clearRect(0,0,900,380);ctx.fillStyle='#d8edf4';ctx.fillRect(0,0,900,380);ctx.fillStyle='#f9fcff';ctx.fillRect(bounds.x,bounds.y,bounds.w,bounds.h);ctx.strokeStyle='#627d8c';ctx.lineWidth=7;ctx.strokeRect(bounds.x,bounds.y,bounds.w,bounds.h);ctx.strokeStyle='#627d8c';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(mid,bounds.y);ctx.lineTo(mid,open?openingTop:bounds.y+bounds.h);if(open){ctx.moveTo(mid,openingBottom);ctx.lineTo(mid,bounds.y+bounds.h)}ctx.stroke();ctx.fillStyle=open?'#239a64':'#db7a28';ctx.fillRect(mid-13,42,26,30);ctx.fillStyle='#1a3b50';ctx.font='bold 19px system-ui';ctx.textAlign='center';ctx.fillText('Serbatoio A',255,354);ctx.fillText('Serbatoio B',645,354);ctx.font='15px system-ui';ctx.fillText(open?'Valvola aperta':'Valvola chiusa',mid,27);for(const p of particles){ctx.fillStyle='#277bc0';ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fill()}}
+function loop(t){if(!last)last=t;let dt=Math.min((t-last)/1000,.04);last=t;advance(dt);draw();requestAnimationFrame(loop)}document.getElementById('open').onclick=()=>{open=true;document.getElementById('open').disabled=true;update()};document.getElementById('reset').onclick=init;document.getElementById('pause').onclick=()=>{paused=!paused;document.getElementById('pause').textContent=paused?'Riprendi':'Pausa'};init();requestAnimationFrame(loop);
+</script></body></html>
