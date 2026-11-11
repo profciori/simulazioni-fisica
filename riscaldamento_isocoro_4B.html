@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Riscaldamento isocoro — 4B</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#173042;background:#f5f8fb}
+*{box-sizing:border-box}body{margin:0;padding:18px}.wrap{max-width:950px;margin:auto}
+h1{font-size:clamp(22px,4vw,32px);margin:0 0 6px}.sub{color:#52687a;margin:0 0 16px}
+.panel{background:white;border:1px solid #d7e1e8;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #15304409}
+canvas{width:100%;display:block;border-radius:10px;background:#e7f2f7}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+button{font:inherit;border:0;border-radius:10px;padding:11px 16px;cursor:pointer;background:#1366a3;color:white;font-weight:650}
+button.secondary{background:#e6edf2;color:#19374c}button:disabled{opacity:.5;cursor:default}
+.readouts{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,1fr);gap:14px;align-items:stretch}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.graph-box{background:#f0f5f9;border-radius:12px;padding:12px;min-width:0}.graph-box h3{margin:0 0 7px;font-size:16px}.graph-box canvas{background:white;border:1px solid #dce6ed;border-radius:9px}.graph-box small{color:#597084;display:block;margin-top:7px}
+.stat{background:#f0f5f9;border-radius:12px;padding:12px}.stat small{display:block;color:#597084}.stat strong{font-size:23px}
+.note{font-size:14px;line-height:1.55;color:#425a6c}.equations{display:flex;gap:10px;flex-wrap:wrap}
+.eq{background:#eaf6ee;color:#17613b;border-radius:9px;padding:10px 18px;font-size:19px;font-weight:700}
+#status{font-weight:650;color:#235878}.bar{height:9px;background:#e4edf4;border-radius:8px;overflow:hidden;margin-top:10px}
+.bar>div{height:100%;background:#e68b3c;width:0%}
+@media(max-width:700px){.readouts{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:19px}}
+</style></head>
+<body><main class="wrap">
+<h1>Riscaldamento isocoro</h1>
+<p class="sub">Classe 4B · Gas perfetto monoatomico in un recipiente rigido · Modello microscopico illustrativo</p>
+<section class="panel">
+<canvas id="scene" width="900" height="400" aria-label="Particelle di gas in recipiente rigido con sorgente di calore animata"></canvas>
+<div class="actions">
+<button id="heat">Accendi la fiamma</button>
+<button id="reset" class="secondary">Ripristina</button>
+<button id="pause" class="secondary">Pausa</button>
+</div>
+<p id="status" aria-live="polite">Stato iniziale: recipiente rigido, sorgente spenta.</p>
+<div class="bar"><div id="progress"></div></div>
+</section>
+<section class="panel">
+<div class="readouts"><div class="stats">
+<div class="stat"><small>Volume</small><strong id="volume">V₀</strong></div>
+<div class="stat"><small>Pressione</small><strong id="pressure">1,00 P₀</strong></div>
+<div class="stat"><small>Temperatura</small><strong id="temperature">300 K</strong></div>
+<div class="stat"><small>Velocità quadratica media</small><strong id="speed">1,00 v₀</strong></div>
+<div class="stat"><small>Energia interna</small><strong id="energy">3,74 kJ</strong></div>
+<div class="stat"><small>Calore fornito Q</small><strong id="heatReadout">+0 J</strong></div>
+<div class="stat"><small>Stato</small><strong id="phase">Iniziale</strong></div>
+</div><div class="graph-box"><h3>Diagramma P–V · Isocora</h3><canvas id="pvGraph" width="400" height="320" aria-label="Diagramma pressione-volume con punto che sale lungo la retta verticale V costante"></canvas><small>Il punto rappresenta lo stato di equilibrio del gas e sale lungo V = V₀.</small></div></div>
+<p class="note">Il recipiente è <b>rigido</b>: il volume non cambia. Nel modello, all'aumentare della temperatura aumenta l'energia cinetica media delle particelle, che si muovono più rapidamente; aumentano anche la pressione e l'energia interna. La velocità indicata è il rapporto tra la velocità quadratica media attuale e quella iniziale. Per rendere più evidente il fenomeno, il cambiamento di velocità nell’animazione è amplificato rispetto alla variazione fisica; i valori numerici restano quelli del modello ideale.</p>
+</section>
+<section class="panel">
+<h2>Scambi energetici</h2>
+<div class="equations"><span class="eq" id="q">Q = 0 J</span><span class="eq">L = 0</span><span class="eq" id="du">ΔU = 0 J</span></div>
+<p class="note">Il gas riceve energia per trasferimento di calore dalla sorgente. Non essendoci variazioni di volume né altri lavori, il lavoro meccanico è nullo. In questo modello ideale tutta l'energia trasferita aumenta l'energia interna del gas: <b>Q = ΔU</b>. La fiamma è una rappresentazione schematica della sorgente calda.</p>
+</section>
+</main>
+<script>
+"use strict";
+const canvas=document.getElementById('scene'),ctx=canvas.getContext('2d');
+const pvCanvas=document.getElementById('pvGraph'),pv=pvCanvas.getContext('2d');
+const N=100,R=8.314462618,T0=300,TF=480,nMol=1,Cv=1.5*nMol*R,heatingSeconds=15;
+const rect={x:145,y:52,w:610,h:240},radius=4.3;
+const $=id=>document.getElementById(id);
+let particles=[],temperature=T0,elapsed=0,heating=false,paused=false,last=0,flamePhase=0;
+const rand=(a,b)=>a+Math.random()*(b-a);
+function visualScale(T){return .65+1.0*(T-T0)/(TF-T0)}
+function fmt(v,d=0){return v.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function reset(){
+ temperature=T0;elapsed=0;heating=false;paused=false;last=0;flamePhase=0;
+ particles=Array.from({length:N},()=>{const a=rand(0,2*Math.PI),s=rand(125,225)*visualScale(T0);return{x:rand(rect.x+12,rect.x+rect.w-12),y:rand(rect.y+12,rect.y+rect.h-12),vx:Math.cos(a)*s,vy:Math.sin(a)*s}});
+ $('heat').disabled=false;$('heat').textContent='Accendi la fiamma';$('pause').textContent='Pausa';update();draw();drawPV();
+}
+function update(){
+ const ratio=temperature/T0,deltaU=Cv*(temperature-T0),pct=100*(temperature-T0)/(TF-T0);
+ $('volume').textContent='V₀';
+ $('pressure').textContent=fmt(ratio,2)+' P₀';
+ $('temperature').textContent=fmt(temperature,0)+' K';
+ $('speed').textContent=fmt(Math.sqrt(ratio),2)+' v₀';
+ $('energy').textContent=fmt(Cv*temperature/1000,2)+' kJ';
+ $('phase').textContent=heating?'Riscaldamento':temperature>=TF-.001?'Finale':'Iniziale';
+ $('q').textContent='Q = +'+fmt(deltaU,0)+' J';
+ $('heatReadout').textContent='+'+fmt(deltaU,0)+' J';
+ $('du').textContent='ΔU = +'+fmt(deltaU,0)+' J';
+ $('progress').style.width=pct+'%';
+ $('status').textContent=heating?'Sorgente accesa: il gas riceve calore, mentre il volume resta costante.':temperature>=TF-.001?'Riscaldamento concluso: sorgente spenta, gas alla nuova temperatura.':'Stato iniziale: recipiente rigido, sorgente spenta.';
+}
+function advance(dt){
+ if(paused)return;
+ flamePhase+=dt*9;
+ if(heating){
+  const prev=temperature;
+  elapsed=Math.min(heatingSeconds,elapsed+dt);
+  temperature=T0+(TF-T0)*elapsed/heatingSeconds;
+  const factor=visualScale(temperature)/visualScale(prev);
+  for(const p of particles){p.vx*=factor;p.vy*=factor}
+  if(elapsed>=heatingSeconds){heating=false;$('heat').disabled=true;$('heat').textContent='Riscaldamento concluso'}
+ }
+ const left=rect.x+radius+5,right=rect.x+rect.w-radius-5,top=rect.y+radius+5,bottom=rect.y+rect.h-radius-5;
+ for(const p of particles){
+  let remain=dt;
+  while(remain>0){
+   const h=Math.min(remain,.008);remain-=h;
+   p.x+=p.vx*h;p.y+=p.vy*h;
+   if(p.x<left){p.x=2*left-p.x;p.vx=Math.abs(p.vx)}
+   if(p.x>right){p.x=2*right-p.x;p.vx=-Math.abs(p.vx)}
+   if(p.y<top){p.y=2*top-p.y;p.vy=Math.abs(p.vy)}
+   if(p.y>bottom){p.y=2*bottom-p.y;p.vy=-Math.abs(p.vy)}
+  }
+ }
+ update();
+}
+function drawPV(){
+ const w=pvCanvas.width,h=pvCanvas.height,px=64,top=26,bottom=260,base=1,upper=1.8,x=210;
+ pv.clearRect(0,0,w,h);pv.fillStyle="#fff";pv.fillRect(0,0,w,h);
+ pv.strokeStyle="#e3ebf1";pv.lineWidth=1;pv.font="13px system-ui";pv.textAlign="right";pv.fillStyle="#65798c";
+ for(let i=0;i<=4;i++){let val=1+i*.2,y=bottom-(val-base)/(upper-base)*(bottom-top);pv.beginPath();pv.moveTo(px,y);pv.lineTo(360,y);pv.stroke();pv.fillText(val.toFixed(1).replace(".",","),px-10,y+5)}
+ pv.strokeStyle="#60788e";pv.lineWidth=2;pv.beginPath();pv.moveTo(px,top-10);pv.lineTo(px,bottom);pv.lineTo(365,bottom);pv.stroke();
+ pv.fillStyle="#314c65";pv.font="bold 15px system-ui";pv.textAlign="center";pv.fillText("P / P₀",43,17);pv.fillText("V / V₀",355,300);pv.fillText("1",x,bottom+23);
+ const y0=bottom-(1-base)/(upper-base)*(bottom-top),y1=bottom-(TF/T0-base)/(upper-base)*(bottom-top);
+ pv.strokeStyle="#b6d6ee";pv.lineWidth=5;pv.beginPath();pv.moveTo(x,y0);pv.lineTo(x,y1);pv.stroke();
+ const y=bottom-(temperature/T0-base)/(upper-base)*(bottom-top);pv.strokeStyle="#2075b5";pv.lineWidth=5;pv.beginPath();pv.moveTo(x,y0);pv.lineTo(x,y);pv.stroke();
+ pv.fillStyle="#e58b3d";pv.beginPath();pv.arc(x,y,8,0,2*Math.PI);pv.fill();pv.strokeStyle="white";pv.lineWidth=2;pv.stroke();
+ pv.fillStyle="#255575";pv.font="bold 14px system-ui";pv.textAlign="left";pv.fillText("Stato attuale",x+16,Math.max(top+12,y-10));
+}
+function drawFlame(x,y,i){
+ const flicker=Math.sin(flamePhase+i*1.8)*5+Math.sin(flamePhase*1.7+i)*3;
+ const h=31+flicker;
+ ctx.beginPath();ctx.moveTo(x-13,y);ctx.quadraticCurveTo(x-17,y-16,x-4,y-h);ctx.quadraticCurveTo(x+3,y-h+14,x+7,y-h-3);ctx.quadraticCurveTo(x+21,y-10,x+13,y);ctx.closePath();
+ ctx.fillStyle='#ef7e26';ctx.fill();
+ ctx.beginPath();ctx.moveTo(x-6,y);ctx.quadraticCurveTo(x-8,y-12,x,y-h*.7);ctx.quadraticCurveTo(x+9,y-9,x+6,y);ctx.closePath();ctx.fillStyle='#ffd36a';ctx.fill();
+}
+function draw(){
+ ctx.clearRect(0,0,900,400);ctx.fillStyle='#d8edf4';ctx.fillRect(0,0,900,400);
+ ctx.fillStyle='#f9fcff';ctx.fillRect(rect.x,rect.y,rect.w,rect.h);
+ ctx.strokeStyle='#627d8c';ctx.lineWidth=8;ctx.strokeRect(rect.x,rect.y,rect.w,rect.h);
+ for(const p of particles){ctx.beginPath();ctx.arc(p.x,p.y,radius,0,2*Math.PI);ctx.fillStyle='#277bc0';ctx.fill()}
+ ctx.fillStyle='#1a3b50';ctx.font='bold 18px system-ui';ctx.textAlign='center';
+ ctx.fillText('Recipiente rigido · V = V₀',450,30);
+ ctx.fillStyle='#74899b';ctx.fillRect(335,353,230,9);ctx.fillStyle='#4e6578';ctx.fillRect(357,361,186,10);
+ if(heating){for(let i=0;i<7;i++)drawFlame(367+i*27,350,i)}
+ else {ctx.fillStyle='#9aabb9';ctx.font='15px system-ui';ctx.fillText(temperature>=TF-.001?'Sorgente spenta':'Sorgente di calore',450,341)}
+ if(heating){
+  ctx.strokeStyle='#e7a15a';ctx.lineWidth=2.5;
+  for(let i=0;i<4;i++){let x=380+i*46;let shift=Math.sin(flamePhase+i)*3;ctx.beginPath();ctx.moveTo(x,322);ctx.quadraticCurveTo(x+shift+5,313,x,301);ctx.stroke()}
+ }
+ ctx.fillStyle='#45667f';ctx.font='14px system-ui';ctx.fillText('Modello illustrativo: particelle non interagenti, pareti rigide',450,391);
+}
+function loop(t){
+ if(!last)last=t;
+ const dt=Math.min((t-last)/1000,.045);last=t;
+ advance(dt);draw();drawPV();requestAnimationFrame(loop);
+}
+$('heat').onclick=()=>{if(!heating&&temperature<TF){heating=true;$('heat').disabled=true;update()}};
+$('reset').onclick=reset;
+$('pause').onclick=()=>{paused=!paused;$('pause').textContent=paused?'Riprendi':'Pausa'};
+reset();requestAnimationFrame(loop);
+</script></body></html>
