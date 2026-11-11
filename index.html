@@ -51,11 +51,11 @@ footer{border-top:1px solid var(--stroke);padding:25px 0 35px;color:#718299;font
 <header class="hero">
  <div class="wrap">
   <nav><div class="brand"><span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" width="29" height="29" fill="none" stroke="white" stroke-linecap="round" stroke-width="1.65"><ellipse cx="16" cy="16" rx="6.5" ry="13" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="6.5" ry="13" transform="rotate(-60 16 16)"/><ellipse cx="16" cy="16" rx="6.5" ry="13"/><circle cx="16" cy="16" r="2.2" fill="#9dd2ff" stroke="none"/></svg></span>Laboratorio di Fisica</div><span class="navnote">Liceo scientifico · A.S. 2026/2027</span></nav>
-  <div class="hero-inner"><div class="eyebrow">Simulazioni interattive · Dinamica e termodinamica</div><h1>La fisica<br>si <em>mette in moto.</em></h1><p>Esplora fenomeni fisici attraverso modelli animati, grafici e grandezze aggiornate in tempo reale. Modifica i parametri, osserva l’evoluzione del sistema e collega il modello alle leggi fisiche.</p><div class="hero-chip"><span class="indicator"></span>4 simulazioni disponibili · Funzionano anche su iPad</div></div>
+  <div class="hero-inner"><div class="eyebrow">Simulazioni interattive · Dinamica e termodinamica</div><h1>La fisica<br>si <em>mette in moto.</em></h1><p>Esplora fenomeni fisici attraverso modelli animati, grafici e grandezze aggiornate in tempo reale. Modifica i parametri, osserva l’evoluzione del sistema e collega il modello alle leggi fisiche.</p><div class="hero-chip"><span class="indicator"></span>5 simulazioni disponibili · Funzionano anche su iPad</div></div>
  </div>
 </header>
 <main class="wrap">
- <div class="section-head"><div><h2>Le simulazioni</h2><p>Scegli un esperimento per iniziare.</p></div><div class="count">4 modelli</div></div>
+ <div class="section-head"><div><h2>Le simulazioni</h2><p>Scegli un esperimento per iniziare.</p></div><div class="count">5 modelli</div></div>
  <section class="cards" aria-label="Elenco simulazioni">
   <!-- Se i file HTML sul repository hanno nomi diversi, modifica solo gli attributi href delle schede. -->
   <a class="card" href="macchina_atwood_3A_v3.html" aria-label="Apri simulazione Macchina di Atwood">
@@ -89,6 +89,25 @@ footer{border-top:1px solid var(--stroke);padding:25px 0 35px;color:#718299;font
     <text x="257" y="82" text-anchor="middle" font-family="Georgia" font-style="italic" font-size="15" fill="#356fa7">PV<tspan dy="-5" font-size="11">γ</tspan><tspan dy="5"> = cost.</tspan></text>
    </svg></div>
    <div class="card-copy"><div class="card-kicker">Modello 04</div><h3>Trasformazione adiabatica</h3><p>Comprimi o espandi un gas perfetto in condizioni adiabatiche reversibili. Osserva insieme pistone, temperatura, pressione e curve nei diagrammi P-V, T-V e P-T.</p><div class="pills"><span class="pill">Q = 0</span><span class="pill">PVᵞ = costante</span><span class="pill">Gas perfetto</span></div><div class="go">Apri simulazione <span class="arr" aria-hidden="true">→</span></div></div>
+  </a>
+  <a class="card" href="simulazione_joule_4B.html" aria-label="Apri simulazione Espansione libera di Joule">
+   <div class="preview thermo"><span class="preview-label">05 / Termodinamica</span>
+    <svg viewBox="0 0 350 220" role="img" aria-label="Due serbatoi collegati da una valvola, con particelle di gas che si espandono nel vuoto">
+     <rect x="18" y="40" width="314" height="141" rx="13" fill="#e0edf7" stroke="#8baec9" stroke-width="2"/>
+     <rect x="37" y="65" width="124" height="91" rx="6" fill="#fff" stroke="#6585a1" stroke-width="3"/>
+     <rect x="189" y="65" width="124" height="91" rx="6" fill="#fff" stroke="#6585a1" stroke-width="3"/>
+     <path d="M161 96H189M161 125H189" stroke="#6585a1" stroke-width="4"/>
+     <path d="M175 96V125" stroke="#db9752" stroke-width="5" stroke-linecap="round"/>
+     <circle cx="175" cy="110" r="7" fill="#db9752" stroke="#fff" stroke-width="2"/>
+     <g fill="#438fcb"><circle cx="55" cy="86" r="5"/><circle cx="88" cy="104" r="5"/><circle cx="132" cy="83" r="5"/><circle cx="64" cy="134" r="5"/><circle cx="115" cy="143" r="5"/><circle cx="144" cy="115" r="5"/><circle cx="99" cy="79" r="5"/><circle cx="79" cy="119" r="5"/><circle cx="120" cy="96" r="5"/></g>
+     <g fill="#438fcb" opacity=".75"><circle cx="218" cy="85" r="5"/><circle cx="246" cy="114" r="5"/><circle cx="291" cy="91" r="5"/><circle cx="211" cy="141" r="5"/><circle cx="279" cy="139" r="5"/></g>
+     <path d="M164 110h23m-7-6 7 6-7 6" stroke="#dd9550" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+     <text x="100" y="174" text-anchor="middle" font-size="12" fill="#456a8d" font-weight="700">GAS</text>
+     <text x="251" y="174" text-anchor="middle" font-size="12" fill="#456a8d" font-weight="700">VUOTO → GAS</text>
+     <text x="175" y="204" text-anchor="middle" font-size="14" fill="#456a8d" font-weight="650">Q = 0 · L = 0 · ΔU = 0</text>
+    </svg>
+   </div>
+   <div class="card-copy"><div class="card-kicker">Modello 05</div><h3>Espansione libera di Joule</h3><p>Apri la valvola tra due serbatoi e osserva le particelle distribuirsi nel volume disponibile. Confronta gli stati di equilibrio e il bilancio energetico.</p><div class="pills"><span class="pill">Espansione nel vuoto</span><span class="pill">Q = L = 0</span><span class="pill">Energia interna</span></div><div class="go">Apri simulazione <span class="arr" aria-hidden="true">→</span></div></div>
   </a>
  </section>
  <aside class="tip"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#3e72a7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M10 17h4M9 7h6"/></svg><div><strong>Su iPad:</strong> apri questa pagina in Safari, tocca <strong>Condividi → Aggiungi alla schermata Home</strong> e avrai un unico accesso a tutto il laboratorio. Le simulazioni si aprono con un tocco.</div></aside>
