@@ -17,6 +17,8 @@ Le simulazioni sono realizzate in **HTML, CSS e JavaScript** e funzionano dirett
 
 | Termodinamica | [Espansione adiabatica con pistone](espansione_adiabatica_4B.html) | Espansione adiabatica reversibile, particelle, pistone mobile, diagramma P–V, lavoro del gas e ΔU = −L |
 
+| Termodinamica | [Quattro cicli termodinamici](cicli_termodinamici_4B.html) | Quattro cicli nel piano di Clapeyron, pistone e particelle animate, coordinate termodinamiche, rapporti rispetto allo stato iniziale, Q e L cumulati e bilancio ΔU = Q − L |
+
 ## Pagina principale
 
 Il file [`index.html`](index.html) raccoglie tutte le simulazioni in un'unica interfaccia e può essere usato come pagina iniziale del laboratorio.
