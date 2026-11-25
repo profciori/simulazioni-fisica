@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -31,6 +32,23 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: '.'
+
+      - name: Attendi disponibilità dell'artefatto Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          for attempt in {1..18}; do
+            count=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts" --jq '[.artifacts[] | select(.name == "github-pages" and .expired == false)] | length' 2>/dev/null || true)
+            if [ "$count" = "1" ]; then
+              echo "Artefatto github-pages disponibile."
+              exit 0
+            fi
+            echo "Artefatto non ancora disponibile (tentativo $attempt/18)."
+            sleep 5
+          done
+          echo "::error::Artefatto github-pages non disponibile o duplicato."
+          exit 1
 
       - name: Pubblica su GitHub Pages
         id: deployment
